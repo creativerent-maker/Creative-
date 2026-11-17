@@ -3,205 +3,325 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Calculadora de Proyección</title>
+<title>Calculador de Distancia</title>
 <style>
   :root {
-    --bg: #f4f5f7; --card: #ffffff; --text: #1b1e24; --muted: #5f6673;
-    --border: #d9dde3; --accent: #0b6bcb; --accent-soft: #e6f0fb; --error: #b42318;
+    --bg: #f2f3f5; --card: #ffffff; --text: #1b1e24; --muted: #5f6673;
+    --border: #d9dde3; --accent: #c8102e; --accent-soft: #fbe9ec; --field: #f7f8fa; --error: #b42318;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #121418; --card: #1c1f25; --text: #e9ebef; --muted: #9aa1ad;
-      --border: #333842; --accent: #5aa7f2; --accent-soft: #1b2a3b; --error: #f97066;
+      --border: #333842; --accent: #ff5a6e; --accent-soft: #3a1d23; --field: #15171c; --error: #f97066;
     }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121418; --card: #1c1f25; --text: #e9ebef; --muted: #9aa1ad;
+    --border: #333842; --accent: #ff5a6e; --accent-soft: #3a1d23; --field: #15171c; --error: #f97066;
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--text);
     font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-  main { max-width: 760px; margin: 0 auto; padding: 24px 16px 48px; }
-  h1 { font-size: 1.6rem; margin: 0 0 4px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 1.7rem; margin: 0 0 4px; }
+  h2 { font-size: 1.05rem; margin: 0 0 12px; display: flex; align-items: center; gap: 8px; }
+  h2 .n { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #fff; font-size: .85rem; }
   .sub { color: var(--muted); margin: 0 0 20px; }
-  .tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-  .tab { flex: 1 1 200px; padding: 12px; border: 1px solid var(--border); background: var(--card);
-    color: var(--text); border-radius: 10px; cursor: pointer; font: inherit; font-weight: 600; }
-  .tab[aria-selected="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
-  fieldset { border: 0; padding: 0; margin: 0 0 16px; }
-  legend, label { font-weight: 600; display: block; margin-bottom: 6px; }
-  .ratios { display: flex; gap: 8px; flex-wrap: wrap; }
-  .ratios label { flex: 1 1 80px; margin: 0; }
-  .ratios input { position: absolute; opacity: 0; }
-  .ratios span { display: block; text-align: center; padding: 10px; border: 1px solid var(--border);
-    border-radius: 8px; cursor: pointer; }
-  .ratios input:checked + span { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
-  .ratios input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-  .field input, .field select { width: 100%; padding: 10px 12px; font: inherit; color: var(--text);
-    background: var(--bg); border: 1px solid var(--border); border-radius: 8px; }
-  .hint { font-size: .85rem; color: var(--muted); font-weight: 400; }
-  .error { color: var(--error); font-size: .9rem; min-height: 1.2em; margin: 8px 0 0; }
-  .results { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
-  .stat { background: var(--bg); border-radius: 10px; padding: 12px; }
-  .stat .k { font-size: .85rem; color: var(--muted); }
-  .stat .v { font-size: 1.35rem; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .stat.main { background: var(--accent-soft); }
-  .stat.main .v { color: var(--accent); }
-  svg { width: 100%; height: auto; display: block; margin-top: 16px; }
-  .formula { font-size: .9rem; color: var(--muted); margin-top: 12px; }
+  .layout { display: grid; grid-template-columns: minmax(260px, 340px) 1fr; gap: 16px; align-items: start; }
+  @media (max-width: 760px) { .layout { grid-template-columns: 1fr; } }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 16px; }
+  input, select { width: 100%; padding: 10px 12px; font: inherit; color: var(--text);
+    background: var(--field); border: 1px solid var(--border); border-radius: 8px; }
+  input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  #list { max-height: 520px; overflow-y: auto; margin-top: 10px; border-top: 1px solid var(--border); }
+  @media (max-width: 760px) { #list { max-height: 260px; } }
+  .prod { display: block; width: 100%; text-align: left; padding: 9px 6px; border: 0; border-bottom: 1px solid var(--border);
+    background: none; color: var(--text); font: inherit; cursor: pointer; }
+  .prod:hover, .prod.sel { background: var(--accent-soft); }
+  .prod b { display: block; }
+  .prod small { color: var(--muted); }
+  .chosen { font-weight: 700; font-size: 1.1rem; margin: 0 0 12px; }
+  .chosen small { display: block; font-weight: 400; color: var(--muted); font-size: .85rem; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .lbl { font-weight: 600; font-size: .9rem; margin-bottom: 6px; display: block; }
+  .seg { display: flex; gap: 6px; flex-wrap: wrap; }
+  .seg button { flex: 1 1 70px; padding: 9px; border: 1px solid var(--border); border-radius: 8px; background: var(--field);
+    color: var(--text); font: inherit; cursor: pointer; }
+  .seg button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+  .field .abbr { display: inline-block; min-width: 30px; padding: 1px 6px; margin-right: 4px; border-radius: 4px;
+    background: var(--accent); color: #fff; font-size: .75rem; text-align: center; }
+  .field input.active { border-color: var(--accent); background: var(--accent-soft); }
+  .alert { color: var(--error); font-size: .82rem; min-height: 1.1em; margin-top: 3px; }
+  .hint { color: var(--muted); font-size: .85rem; margin: 6px 0 14px; }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+  .btn { padding: 11px 20px; border-radius: 8px; border: 1px solid var(--accent); font: inherit; font-weight: 700; cursor: pointer; }
+  .btn.primary { background: var(--accent); color: #fff; }
+  .btn.ghost { background: transparent; color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  td { padding: 10px 6px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  td:first-child { color: var(--muted); width: 45%; }
+  td:last-child { font-weight: 700; }
+  tr.main td:last-child { color: var(--accent); font-size: 1.15rem; }
+  svg { width: 100%; height: auto; display: block; margin-top: 14px; }
+  .note { color: var(--muted); font-size: .8rem; margin-top: 12px; }
+  [hidden] { display: none !important; }
 </style>
 </head>
 <body>
 <main>
-  <h1>Calculadora de distancia de proyección</h1>
-  <p class="sub">Calcula la distancia a partir del ancho de pantalla, o el ancho de pantalla a partir de la distancia.</p>
+  <h1>Calculador de distancia</h1>
+  <p class="sub">Elige un proyector Optoma o escribe el ratio de óptica. Rellena uno de los campos (ancho, altura, diagonal o distancia) y pulsa Calcular.</p>
 
-  <div class="tabs" role="tablist">
-    <button class="tab" role="tab" id="tab-dist" aria-selected="true">Calcular distancia</button>
-    <button class="tab" role="tab" id="tab-width" aria-selected="false">Calcular ancho de pantalla</button>
-  </div>
+  <div class="layout">
+    <!-- PASO 1: proyector -->
+    <section class="card">
+      <h2><span class="n">1</span>Seleccione un proyector</h2>
+      <input id="filter" type="search" placeholder="Buscar modelo (p. ej. UHD38)" aria-label="Buscar proyector">
+      <div id="list" role="listbox" aria-label="Proyectores"></div>
+    </section>
 
-  <form class="card" id="form" onsubmit="return false">
-    <fieldset>
-      <legend>Formato de imagen</legend>
-      <div class="ratios">
-        <label><input type="radio" name="ratio" value="16:9" checked><span>16:9</span></label>
-        <label><input type="radio" name="ratio" value="16:10"><span>16:10</span></label>
-        <label><input type="radio" name="ratio" value="4:3"><span>4:3</span></label>
-      </div>
-    </fieldset>
+    <div>
+      <!-- PASO 2: parámetros -->
+      <section class="card">
+        <h2><span class="n">2</span>Proyector y óptica</h2>
+        <p class="chosen" id="chosen">Manual<small>Introduce el ratio de óptica de tu proyector</small></p>
 
-    <div class="grid">
-      <div class="field">
-        <label for="tr">Ratio de óptica (throw ratio) <span class="hint">p. ej. 1.5</span></label>
-        <input id="tr" type="number" inputmode="decimal" step="0.01" min="0.1" value="1.5">
-      </div>
-      <div class="field">
-        <label for="trMax">Ratio máx. (zoom) <span class="hint">opcional</span></label>
-        <input id="trMax" type="number" inputmode="decimal" step="0.01" min="0.1" placeholder="—">
-      </div>
-      <div class="field" id="wrap-width">
-        <label for="width">Ancho de pantalla</label>
-        <input id="width" type="number" inputmode="decimal" step="0.01" min="0" value="3">
-      </div>
-      <div class="field" id="wrap-dist" hidden>
-        <label for="dist">Distancia de proyección</label>
-        <input id="dist" type="number" inputmode="decimal" step="0.01" min="0" value="4.5">
-      </div>
-      <div class="field">
-        <label for="unit">Unidad</label>
-        <select id="unit">
-          <option value="m">Metros (m)</option>
-          <option value="cm">Centímetros (cm)</option>
-          <option value="in">Pulgadas (in)</option>
-          <option value="ft">Pies (ft)</option>
-        </select>
-      </div>
+        <div class="row" style="display:block">
+          <span class="lbl">Unidades</span>
+          <div class="seg" id="units">
+            <button type="button" data-u="cm" aria-pressed="true">CM</button>
+            <button type="button" data-u="in" aria-pressed="false">Pulgadas</button>
+          </div>
+        </div>
+
+        <div class="row" style="display:block">
+          <span class="lbl">Relación de aspecto</span>
+          <div class="seg" id="ratios">
+            <button type="button" data-r="16:9" aria-pressed="true">16:9</button>
+            <button type="button" data-r="16:10" aria-pressed="false">16:10</button>
+            <button type="button" data-r="4:3" aria-pressed="false">4:3</button>
+          </div>
+        </div>
+
+        <span class="lbl">Ratio de óptica (throw ratio)</span>
+        <div class="grid2">
+          <div><input id="trMin" type="number" inputmode="decimal" step="0.01" min="0.1" value="1.5" aria-label="Ratio de óptica mínimo"></div>
+          <div><input id="trMax" type="number" inputmode="decimal" step="0.01" min="0.1" placeholder="máx. (zoom, opcional)" aria-label="Ratio de óptica máximo"></div>
+        </div>
+        <p class="hint">Ratio = distancia ÷ ancho de imagen. Si la óptica tiene zoom, indica mínimo y máximo.</p>
+      </section>
+
+      <!-- PASO 3: medidas -->
+      <section class="card">
+        <h2><span class="n">3</span>Indique una medida</h2>
+        <p class="hint" style="margin-top:0">Rellena <b>solo uno</b>: altura, ancho o diagonal de la pantalla, o la distancia de proyección.</p>
+        <div class="grid4">
+          <div class="field"><label class="lbl" for="f-width"><span class="abbr">W</span>Ancho</label>
+            <input id="f-width" data-k="width" type="number" inputmode="decimal" step="any" min="0" placeholder="Indicar ancho"><div class="alert" id="a-width"></div></div>
+          <div class="field"><label class="lbl" for="f-height"><span class="abbr">H</span>Altura</label>
+            <input id="f-height" data-k="height" type="number" inputmode="decimal" step="any" min="0" placeholder="Indicar altura"><div class="alert" id="a-height"></div></div>
+          <div class="field"><label class="lbl" for="f-diag"><span class="abbr">D</span>Diagonal</label>
+            <input id="f-diag" data-k="diag" type="number" inputmode="decimal" step="any" min="0" placeholder="Indicar diagonal"><div class="alert" id="a-diag"></div></div>
+          <div class="field"><label class="lbl" for="f-dist"><span class="abbr">PD</span>Distancia de proyección</label>
+            <input id="f-dist" data-k="dist" type="number" inputmode="decimal" step="any" min="0" placeholder="Indique distancia"><div class="alert" id="a-dist"></div></div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="calc" type="button">Calcular</button>
+          <button class="btn ghost" id="reset" type="button">Empezar de nuevo</button>
+        </div>
+      </section>
+
+      <!-- RESULTADOS -->
+      <section class="card" id="results" hidden aria-live="polite">
+        <h2>Resultados</h2>
+        <table><tbody id="rtable"></tbody></table>
+        <svg id="diagram" viewBox="0 0 640 240" role="img" aria-label="Esquema de proyección"></svg>
+        <p class="note">Sólo para propósitos de estimación. Los ratios de óptica de los modelos proceden del calculador de Optoma (optoma.es); confirma siempre con la ficha técnica del proyector.</p>
+      </section>
     </div>
-    <p class="error" id="err" role="alert"></p>
-  </form>
-
-  <section class="card" aria-live="polite">
-    <div class="results" id="results"></div>
-    <svg id="diagram" viewBox="0 0 600 220" role="img" aria-label="Esquema de proyección"></svg>
-    <p class="formula" id="formula"></p>
-  </section>
+  </div>
 </main>
 
 <script>
-  const $ = id => document.getElementById(id);
-  const RATIOS = { "16:9": [16, 9], "16:10": [16, 10], "4:3": [4, 3] };
-  const TO_M = { m: 1, cm: 0.01, in: 0.0254, ft: 0.3048 };
-  let mode = "dist";
+const MODELS = [["4K400x",1.5,1.66,"16:9"],["4K550",1.39,2.22,"16:9"],["4K550ST",0.782,0.782,"16:9"],["CinemaX D2",0.25,0.25,"16:9"],["CinemaX D2 Smart",0.25,0.25,"16:9"],["CinemaX P2",0.25,0.25,"16:9"],["DH1008",1.48,1.62,"16:9"],["DH1009",1.48,1.62,"16:9"],["DH1009i",1.48,1.62,"16:9"],["DH350",1.47,1.62,"16:9"],["DH351",1.47,1.62,"16:9"],["DS322e",1.94,2.16,"4:3"],["DS325",1.95,2.15,"4:3"],["DS330",1.97,2.17,"4:3"],["DS349",1.94,2.16,"4:3"],["DU400",1.4,2.24,"16:10"],["DW318e",1.55,1.73,"16:10"],["DW322",1.55,1.73,"16:10"],["DX319",1.95,2.15,"4:3"],["DX322",1.94,2.16,"4:3"],["DX325",1.95,2.15,"4:3"],["DX330",1.97,2.17,"4:3"],["DX342",1.95,2.15,"4:3"],["DX346",1.95,2.15,"4:3"],["DX349",1.94,2.16,"4:3"],["EH200ST",0.49,0.49,"16:9"],["EH300",1.5,1.8,"16:9"],["EH319UST",0.25,0.25,"16:9"],["EH319USTi",0.25,0.25,"16:9"],["EH320UST",0.25,0.25,"16:9"],["EH320USTi",0.25,0.25,"16:9"],["EH330UST",0.25,0.25,"16:9"],["EH331",1.48,1.62,"16:9"],["EH334",1.47,1.62,"16:9"],["EH335",1.47,1.62,"16:9"],["EH337",1.58,2.06,"16:9"],["EH338",1.48,1.62,"16:9"],["EH340UST",0.25,0.25,"16:9"],["EH341",1.48,1.62,"16:9"],["EH345",1.13,1.47,"16:9"],["EH400",1.48,1.62,"16:9"],["EH400+",1.13,1.47,"16:9"],["EH401",1.5,1.66,"16:9"],["EH412",1.12,1.47,"16:9"],["EH412ST",0.49,0.49,"16:9"],["EH412STx",0.49,0.49,"16:9"],["EH412x",1.12,1.47,"16:9"],["EH415ST",0.5,0.5,"16:9"],["EH416",1.4,2.24,"16:9"],["EH416e",1.4,2.24,"16:9"],["EH460ST",0.5,0.5,"16:9"],["EH461",1.22,1.46,"16:9"],["EH470",1.39,2.09,"16:9"],["EH500",1.59,1.91,"16:9"],["EH501",1.37,2.05,"16:9"],["EH504",1.41,2.24,"16:9"],["EH512",1.41,2.24,"16:9"],["EH515",1.2,2.16,"16:9"],["EH515ST",0.79,0.79,"16:9"],["EH515T",1.2,2.16,"16:9"],["EH515TST",0.79,0.79,"16:9"],["EH615",1.2,2.16,"16:9"],["EH615T",1.2,2.16,"16:9"],["EW400",1.28,1.54,"16:10"],["EW631",1.47,1.81,"16:10"],["EX400",1.6,1.92,"4:3"],["EX540",1.6,1.92,"4:3"],["EX631",1.97,2.17,"4:3"],["FW5200",1.47,1.81,"16:10"],["FX5200",1.97,2.17,"4:3"],["GT1070X",0.49,0.49,"16:9"],["GT1070Xe",0.49,0.49,"16:9"],["GT1080",0.49,0.49,"16:9"],["GT1080Darbee",0.49,0.49,"16:9"],["GT1080e",0.49,0.49,"16:9"],["GT3500HDR",0.253,0.253,"16:9"],["GT5000",0.25,0.25,"16:9"],["GT5500",0.25,0.25,"16:9"],["GT760",0.52,0.52,"16:10"],["H100",1.47,1.83,"16:10"],["H111",1.47,1.83,"16:10"],["H112e",1.55,1.7,"16:10"],["H114",1.55,1.73,"16:10"],["H116",1.55,1.73,"16:10"],["H116ST",0.52,0.52,"16:10"],["H117B",1.55,1.73,"16:10"],["H117ST",0.52,0.52,"16:10"],["H180X",1.55,1.7,"16:10"],["H181X",1.47,1.83,"16:10"],["H182X",1.55,1.7,"16:10"],["H183X",1.55,1.73,"16:10"],["H184X",1.55,1.73,"16:10"],["H185X",1.55,1.73,"16:10"],["H190X",1.55,1.73,"16:10"],["HD131Xe",1.5,1.8,"16:9"],["HD137X",1.48,1.62,"16:9"],["HD140x",1.48,1.62,"16:9"],["HD141X",1.48,1.62,"16:9"],["HD142X",1.48,1.62,"16:9"],["HD143X",1.47,1.62,"16:9"],["HD144X",1.47,1.62,"16:9"],["HD145X",1.47,1.62,"16:9"],["HD146X",1.47,1.62,"16:9"],["HD151X",1.37,2.05,"16:9"],["HD161X",1.39,2.09,"16:9"],["HD228Xe",1.47,1.62,"16:9"],["HD25-LV",1.5,1.8,"16:9"],["HD25e",1.5,1.8,"16:9"],["HD26",1.48,1.62,"16:9"],["HD27",1.48,1.62,"16:9"],["HD27B",1.48,1.62,"16:9"],["HD27e",1.47,1.62,"16:9"],["HD28B",1.47,1.62,"16:9"],["HD28DSE",1.48,1.62,"16:9"],["HD28e",1.47,1.62,"16:9"],["HD28i",1.48,1.62,"16:9"],["HD29Darbee",1.48,1.62,"16:9"],["HD29H",1.47,1.62,"16:9"],["HD29He",1.47,1.62,"16:9"],["HD29HLV",1.12,1.47,"16:9"],["HD29HLVx",1.12,1.47,"16:9"],["HD29HST",0.49,0.49,"16:9"],["HD29HSTx",0.49,0.49,"16:9"],["HD30LV",1.5,1.66,"16:9"],["HD31UST",0.25,0.25,"16:9"],["HD35UST",0.25,0.25,"16:9"],["HD36",1.37,2.05,"16:9"],["HD39Darbee",1.4,2.24,"16:9"],["HD50",1.39,2.09,"16:9"],["HD83",1.5,2.28,"16:9"],["HD90",1.22,1.52,"16:9"],["HD90+",1.22,1.52,"16:9"],["HD91",1.5,2.89,"16:9"],["HD91+",1.5,2.89,"16:9"],["HZ147X",1.48,1.62,"16:9"],["HZ40",1.21,1.59,"16:9"],["HZ40HDR",1.48,1.62,"16:9"],["HZ40ST",0.5,0.5,"16:9"],["HZ40STx",0.5,0.5,"16:9"],["HZ40UST",0.25,0.25,"16:9"],["HZ41HDR",1.48,1.62,"16:9"],["HZ45UST",0.25,0.25,"16:9"],["L1",0.25,0.25,"16:9"],["LH160",1.2,1.2,"16:9"],["LH200",1.2,1.2,"16:9"],["LH351",1.49,1.64,"16:9"],["LV130",1.0,1.0,"16:9"],["LW341",1.55,1.71,"16:9"],["ML1050ST",0.8,0.8,"16:10"],["ML1050ST+",0.8,0.8,"16:10"],["ML1050STi",0.8,0.8,"16:10"],["ML1500e",1.4,1.4,"16:10"],["ML330",1.2,1.2,"16:10"],["ML750",1.5,1.5,"16:10"],["ML750e",1.5,1.5,"16:10"],["ML750ST",0.8,0.8,"16:10"],["Photon Beam PK52",1.21,1.59,"16:9"],["S310e",1.95,2.15,"4:3"],["S311",1.97,2.17,"4:3"],["S312",1.95,2.15,"4:3"],["S313",1.97,2.17,"4:3"],["S316",1.95,2.15,"4:3"],["S321",1.94,2.16,"4:3"],["S322e",1.94,2.16,"4:3"],["S331",1.94,2.16,"4:3"],["S334e",1.94,2.16,"4:3"],["S336",1.94,2.16,"4:3"],["S340",1.94,2.16,"4:3"],["S341",1.94,2.16,"4:3"],["S371",1.94,2.16,"4:3"],["S381",1.94,2.16,"4:3"],["S400",1.94,2.16,"4:3"],["S400LVe",1.94,2.16,"4:3"],["UHD30",1.5,1.66,"16:9"],["UHD300X",1.21,1.59,"16:9"],["UHD310X",1.5,1.66,"16:9"],["UHD35",1.5,1.66,"16:9"],["UHD350X",1.21,1.59,"16:9"],["UHD35x",1.5,1.66,"16:9"],["UHD370X",1.21,1.59,"16:9"],["UHD38",1.5,1.66,"16:9"],["UHD380X",1.21,1.59,"16:9"],["UHD38X",1.5,1.66,"16:9"],["UHD40",1.21,1.59,"16:9"],["UHD42",1.21,1.59,"16:9"],["UHD442X",1.21,1.59,"16:9"],["UHD51",1.21,1.59,"16:9"],["UHD51A",1.21,1.59,"16:9"],["UHD51ALVe",1.21,1.59,"16:9"],["UHD52ALV",1.21,1.59,"16:9"],["UHD55",1.21,1.59,"16:9"],["UHD550X",1.39,2.22,"16:9"],["UHD60",1.39,2.22,"16:9"],["UHD65",1.39,2.22,"16:9"],["UHL55",1.2,1.2,"16:9"],["UHZ45",1.5,1.66,"16:9"],["UHZ50",1.21,1.59,"16:9"],["UHZ55",1.21,1.59,"16:9"],["UHZ58LV",1.4,2.24,"16:9"],["UHZ65",1.39,2.22,"16:9"],["UHZ65LV",1.39,2.22,"16:9"],["UHZ65UST",0.25,0.25,"16:9"],["UHZ78LV",1.25,2.0,"16:9"],["UZ38X",1.21,1.59,"16:9"],["W300",1.55,1.7,"16:10"],["W303",1.47,1.83,"16:10"],["W303ST",0.52,0.52,"16:10"],["W304M",1.5,1.8,"16:10"],["W305ST",0.52,0.52,"16:10"],["W306ST",0.52,0.52,"16:10"],["W307UST",0.35,0.35,"16:10"],["W307USTi",0.35,0.35,"16:10"],["W308STe",0.524,0.524,"16:10"],["W309ST",0.524,0.524,"16:10"],["W310",1.55,1.7,"16:10"],["W311",1.47,1.83,"16:10"],["W312",1.55,1.7,"16:10"],["W316",1.55,1.7,"16:10"],["W316ST",0.524,0.524,"16:10"],["W318STe",0.524,0.524,"16:10"],["W319ST",0.52,0.52,"16:10"],["W319UST",0.27,0.27,"16:10"],["W319USTi",0.27,0.27,"16:10"],["W319USTire",0.27,0.27,"16:10"],["W320UST",0.27,0.27,"16:10"],["W320USTi",0.27,0.27,"16:10"],["W330",1.55,1.73,"16:10"],["W330UST",0.27,0.27,"16:10"],["W331",1.55,1.73,"16:10"],["W334e",1.55,1.73,"16:10"],["W335e",1.55,1.73,"16:10"],["W340",1.55,1.73,"16:10"],["W340UST",0.27,0.27,"16:10"],["W341",1.55,1.73,"16:10"],["W350",1.55,1.7,"16:10"],["W351",1.55,1.7,"16:10"],["W354",1.19,1.54,"16:10"],["W355",1.19,1.54,"16:10"],["W371",1.55,1.73,"16:10"],["W381",1.55,1.73,"16:10"],["W400",1.54,1.7,"16:10"],["W400+",1.19,1.54,"16:10"],["W400LVe",1.55,1.73,"16:10"],["W401",1.28,1.536,"16:10"],["W402",1.28,1.536,"16:10"],["W416",1.47,2.35,"16:10"],["W460ST",0.525,0.525,"16:10"],["W461",1.28,1.54,"16:10"],["W501",1.45,2.17,"16:10"],["W504",1.48,2.35,"16:10"],["W512",1.48,2.35,"16:10"],["W515",1.26,2.27,"16:10"],["w515st",0.83,0.83,"16:10"],["W515T",1.26,2.268,"16:10"],["WU334",1.47,1.62,"16:10"],["WU335",1.47,1.62,"16:10"],["WU337",1.58,2.06,"16:10"],["WU416",1.4,2.24,"16:10"],["WU470",1.39,2.09,"16:10"],["WU515",1.2,2.16,"16:10"],["WU515ST",0.79,0.79,"16:10"],["WU515T",1.2,2.16,"16:10"],["WU515TST",0.79,0.79,"16:10"],["WU615",1.2,2.16,"16:10"],["WU615T",1.2,2.16,"16:10"],["X304M",1.9,2.2,"4:3"],["X305ST",0.626,0.626,"4:3"],["X306ST",0.626,0.626,"4:3"],["X307UST",0.43,0.43,"4:3"],["X307USTi",0.43,0.43,"4:3"],["X308STe",0.617,0.617,"4:3"],["X309ST",0.617,0.617,"4:3"],["X312",1.95,2.15,"4:3"],["X315",1.95,2.15,"4:3"],["X316",1.95,2.15,"4:3"],["X316ST",0.617,0.617,"4:3"],["X318STe",0.617,0.617,"4:3"],["X319UST",0.33,0.33,"4:3"],["X319USTir",0.33,0.33,"4:3"],["X320UST",0.33,0.33,"4:3"],["X320USTi",0.33,0.33,"4:3"],["X330UST",0.33,0.33,"4:3"],["X340",1.94,2.16,"4:3"],["X340UST",0.33,0.33,"4:3"],["X341",1.94,2.16,"4:3"],["X342e",1.94,2.16,"4:3"],["X343e",1.94,2.16,"4:3"],["X345",1.49,1.93,"4:3"],["X350",1.95,2.15,"4:3"],["X351",1.95,2.15,"4:3"],["X354",1.49,1.93,"4:3"],["X355",1.49,1.93,"4:3"],["X371",1.94,2.16,"4:3"],["X381",1.94,2.16,"4:3"],["X400",1.94,2.16,"4:3"],["X400+",1.48,1.92,"4:3"],["X400LVe",1.94,2.16,"4:3"],["X401",1.6,1.92,"4:3"],["X402",1.6,1.92,"4:3"],["X416",1.39,1.9,"4:3"],["X461",1.6,1.92,"4:3"],["X501",1.39,2.26,"4:3"],["X515",1.243,2.238,"4:3"],["X600",1.8,2.11,"4:3"],["Z290X",1.94,2.16,"4:3"],["Z390W",1.18,1.54,"16:10"],["ZH300UW",0.25,0.25,"16:6"],["ZH350",1.48,1.62,"16:9"],["ZH361",1.48,1.62,"16:9"],["ZH400",1.48,1.62,"16:9"],["ZH400UST",0.25,0.25,"16:9"],["ZH400USTi",0.25,0.25,"16:9"],["ZH401e",1.48,1.62,"16:9"],["ZH403",1.21,1.59,"16:9"],["ZH406",1.4,2.24,"16:9"],["ZH406ST",0.5,0.5,"16:9"],["ZH406STx",0.5,0.5,"16:9"],["ZH420UST",0.25,0.25,"16:9"],["ZH430UST",0.253,0.253,"16:9"],["ZH450",1.4,2.24,"16:9"],["ZH451",1.4,2.24,"16:9"],["ZH500T",1.2,1.92,"16:9"],["ZH500UST",0.25,0.25,"16:9"],["ZH506",1.4,2.24,"16:9"],["ZH506e",1.4,2.24,"16:9"],["ZH506Te",1.4,2.24,"16:9"],["ZH510T",1.2,2.13,"16:9"],["ZH510Te",1.2,2.13,"16:9"],["ZH550T",1.2,1.92,"16:9"],["ZH606e",1.2,1.92,"16:9"],["ZK400",1.5,1.66,"16:9"],["ZK420UST",0.25,0.25,"16:9"],["ZK507-W",1.39,2.22,"16:9"],["ZK608TST",0.58,0.58,"16:9"],["ZK708T",1.2,1.92,"16:9"],["ZK810T",1.25,2.0,"16:9"],["ZK810TST",0.65,0.75,"16:9"],["ZU500T",1.2,1.92,"16:10"],["ZU500TST",0.79,0.79,"16:10"],["ZU500USTe",0.253,0.253,"16:10"],["ZU506",1.4,2.24,"16:10"],["ZU506Te",1.4,2.24,"16:10"],["ZU507TST",0.58,0.58,"16:10"],["ZU510T",1.2,2.13,"16:10"],["ZU510Te",1.2,2.13,"16:10"],["ZU550",1.2,2.04,"16:10"],["ZU550T",1.2,1.92,"16:10"],["ZU600UST-B",0.253,0.253,"16:10"],["ZU602",1.2,2.04,"16:10"],["ZU606Te",1.2,1.92,"16:10"],["ZU606TSTe",0.79,0.79,"16:10"],["ZU607T",1.2,1.92,"16:10"],["ZU607TST",0.58,0.58,"16:10"],["ZU707T",1.2,1.92,"16:10"],["ZU720T",1.44,2.59,"16:10"],["ZU720TST",0.75,0.95,"16:10"],["ZU725T",1.25,2.1,"16:10"],["ZU725TST",0.75,0.95,"16:10"],["ZU820T",1.25,2.1,"16:10"],["ZU820TST",0.75,0.95,"16:10"],["ZU920T",1.25,2.0,"16:10"],["ZU920TST",0.65,0.75,"16:10"],["ZW300USTe",0.25,0.25,"16:10"],["ZW300USTie",0.27,0.27,"16:10"],["ZW310STe",0.62,0.62,"16:10"],["ZW340e",1.54,1.72,"16:10"],["ZW350",1.18,1.54,"16:10"],["ZW350e",1.54,1.72,"16:10"],["ZW400",1.18,1.54,"16:10"],["ZW400UST",0.27,0.27,"16:10"],["ZW400USTi",0.27,0.27,"16:10"],["ZW403",1.18,1.54,"16:10"],["ZW410UST",0.266,0.266,"16:10"],["ZW500T",1.26,2.24,"16:10"],["ZX300",1.94,2.16,"4:3"],["ZX310STe",0.62,0.62,"4:3"]];
+const $ = id => document.getElementById(id);
+const AR = { "16:9": 16 / 9, "16:10": 16 / 10, "4:3": 4 / 3, "16:6": 16 / 6 };
+const CM_PER_IN = 2.54;
 
-  function fmt(v, unit) {
-    const d = unit === "cm" ? 1 : 2;
-    return v.toLocaleString("es-ES", { minimumFractionDigits: d, maximumFractionDigits: d }) + " " + unit;
+const state = { units: "cm", ratio: "16:9", native: null, model: null, input: null };
+
+/* ---------- Paso 1: lista de proyectores ---------- */
+function renderList(q = "") {
+  q = q.trim().toLowerCase();
+  const manual = `<button class="prod${state.model ? "" : " sel"}" data-i="-1" role="option"><b>Manual</b><small>Introducir el ratio de óptica a mano</small></button>`;
+  $("list").innerHTML = manual + MODELS.map((m, i) =>
+    (!q || m[0].toLowerCase().includes(q))
+      ? `<button class="prod${state.model === m ? " sel" : ""}" data-i="${i}" role="option"><b>${m[0]}</b><small>Tiro de lente: ${m[1]} ~ ${m[2]} · ${m[3]}</small></button>`
+      : "").join("");
+}
+$("filter").addEventListener("input", e => renderList(e.target.value));
+$("list").addEventListener("click", e => {
+  const b = e.target.closest(".prod"); if (!b) return;
+  selectModel(+b.dataset.i);
+});
+
+function selectModel(i) {
+  const m = i >= 0 ? MODELS[i] : null;
+  state.model = m;
+  if (m) {
+    state.native = m[3];
+    $("trMin").value = m[1];
+    $("trMax").value = m[2] !== m[1] ? m[2] : "";
+    $("chosen").innerHTML = `${m[0]}<small>Tiro de lente ${m[1]} ~ ${m[2]} · Nativo ${m[3]}</small>`;
+    if (AR[m[3]] && $("ratios").querySelector(`[data-r="${m[3]}"]`)) setRatio(m[3]);
+  } else {
+    state.native = null;
+    $("chosen").innerHTML = `Manual<small>Introduce el ratio de óptica de tu proyector</small>`;
   }
-  function range(a, b, unit) {
-    return b == null ? fmt(a, unit) : fmt(Math.min(a, b), unit).replace(" " + unit, "") + " – " + fmt(Math.max(a, b), unit);
+  renderList($("filter").value);
+  if (window.innerWidth <= 760) $("chosen").scrollIntoView({ behavior: "smooth", block: "start" });
+  if (state.input) calculate();
+}
+
+/* ---------- Paso 2: unidades y formato ---------- */
+function setPressed(group, attr, val) {
+  group.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", b.dataset[attr] === val));
+}
+function setRatio(r) { state.ratio = r; setPressed($("ratios"), "r", r); }
+$("ratios").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  setRatio(b.dataset.r); if (state.input) calculate();
+});
+$("units").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b || b.dataset.u === state.units) return;
+  const f = b.dataset.u === "in" ? 1 / CM_PER_IN : CM_PER_IN;
+  document.querySelectorAll(".field input").forEach(inp => {
+    if (inp.value !== "") inp.value = +(parseFloat(inp.value) * f).toFixed(2);
+  });
+  state.units = b.dataset.u; setPressed($("units"), "u", b.dataset.u);
+  if (state.input) calculate();
+});
+["trMin", "trMax"].forEach(id => $(id).addEventListener("input", () => { if (state.input) calculate(); }));
+
+/* ---------- Paso 3: un solo campo activo ---------- */
+document.querySelectorAll(".field input").forEach(inp => {
+  inp.addEventListener("input", () => {
+    document.querySelectorAll(".field input").forEach(o => {
+      if (o !== inp) o.value = "";
+      o.classList.toggle("active", o === inp && inp.value !== "");
+    });
+    document.querySelectorAll(".alert").forEach(a => a.textContent = "");
+    state.input = inp.value !== "" ? inp.dataset.k : null;
+  });
+  inp.addEventListener("keydown", e => { if (e.key === "Enter") calculate(); });
+});
+$("calc").addEventListener("click", calculate);
+$("reset").addEventListener("click", () => {
+  document.querySelectorAll(".field input").forEach(o => { o.value = ""; o.classList.remove("active"); });
+  document.querySelectorAll(".alert").forEach(a => a.textContent = "");
+  $("filter").value = ""; state.input = null; $("trMin").value = 1.5; $("trMax").value = "";
+  setRatio("16:9"); selectModel(-1); $("results").hidden = true;
+});
+
+/* ---------- Cálculo ---------- */
+// Todo se calcula internamente en cm.
+// Fracción del ancho del panel que ocupa la imagen: si el formato elegido es más
+// estrecho que el nativo del proyector, la imagen queda limitada por la altura.
+function widthFactor() {
+  const nat = AR[state.native] || AR[state.ratio], img = AR[state.ratio];
+  return img >= nat ? 1 : img / nat;
+}
+
+function calculate() {
+  document.querySelectorAll(".alert").forEach(a => a.textContent = "");
+  const k = state.input;
+  const tr1 = parseFloat($("trMin").value), tr2Raw = parseFloat($("trMax").value);
+  const tr2 = tr2Raw > 0 ? tr2Raw : tr1;
+  if (!(tr1 > 0)) { $("trMin").focus(); alert("Introduce un ratio de óptica mayor que 0."); return; }
+  if (!k) { $("a-width").textContent = "Indica una medida en alguno de los campos."; return; }
+  const idMap = { width: "f-width", height: "f-height", diag: "f-diag", dist: "f-dist" };
+  let v = parseFloat($(idMap[k]).value);
+  if (!(v > 0)) { $("a-" + k).textContent = "Debe ser un valor mayor que 0."; return; }
+  if (state.units === "in") v *= CM_PER_IN;
+
+  const r = AR[state.ratio], wf = widthFactor();
+  const trLo = Math.min(tr1, tr2), trHi = Math.max(tr1, tr2);
+  let W, D; // W: [min,max] ancho de imagen; D: [min,max] distancia
+  if (k === "dist") {
+    D = [v, v];
+    // más ratio → imagen más pequeña
+    W = [v / trHi * wf, v / trLo * wf];
+  } else {
+    const w = k === "width" ? v : k === "height" ? v * r : v * r / Math.hypot(r, 1);
+    W = [w, w];
+    const panelW = w / wf;
+    D = [panelW * trLo, panelW * trHi];
   }
+  const H = W.map(w => w / r), DG = W.map(w => Math.hypot(w, w / r));
+  showResults({ W, H, DG, D }, k, trLo, trHi);
+}
 
-  function setMode(m) {
-    mode = m;
-    $("tab-dist").setAttribute("aria-selected", m === "dist");
-    $("tab-width").setAttribute("aria-selected", m === "width");
-    $("wrap-width").hidden = m !== "dist";
-    $("wrap-dist").hidden = m !== "width";
-    calc();
-  }
+/* ---------- Presentación ---------- */
+const nf = (x, d) => x.toLocaleString("es-ES", { minimumFractionDigits: d, maximumFractionDigits: d });
+function ftIn(cm) {
+  const totalIn = cm / CM_PER_IN; let ft = Math.floor(totalIn / 12), inch = Math.round(totalIn - ft * 12);
+  if (inch === 12) { ft++; inch = 0; }
+  return `${ft}' ${inch}"`;
+}
+function one(cm, isDiag) {
+  if (isDiag) return `${nf(cm / CM_PER_IN, 0)}″ (${nf(cm, 0)} cm)`;
+  return state.units === "cm"
+    ? `${nf(cm, 1)} cm / ${ftIn(cm)}`
+    : `${nf(cm / CM_PER_IN, 1)}″ / ${ftIn(cm)}`;
+}
+function val([a, b], isDiag) {
+  return Math.abs(a - b) < 0.05 ? one(a, isDiag) : `${one(a, isDiag)} ~ ${one(b, isDiag)}`;
+}
 
-  function calc() {
-    const unit = $("unit").value;
-    const [rw, rh] = RATIOS[document.querySelector("input[name=ratio]:checked").value];
-    const tr = parseFloat($("tr").value);
-    const trMaxRaw = parseFloat($("trMax").value);
-    const trMax = isFinite(trMaxRaw) && trMaxRaw > 0 && trMaxRaw !== tr ? trMaxRaw : null;
-    const input = parseFloat($(mode === "dist" ? "width" : "dist").value);
+function showResults(res, k, trLo, trHi) {
+  const rows = [
+    ["Distancia de proyección (PD)", val(res.D), k !== "dist"],
+    ["Ancho (W)", val(res.W), k === "dist"],
+    ["Altura (H)", val(res.H), k === "dist"],
+    ["Diagonal (D)", val(res.DG, true), k === "dist"],
+    ["Relación de aspecto", state.ratio + (state.native && state.native !== state.ratio ? ` (proyector nativo ${state.native})` : "")],
+    ["Ratio de óptica", trLo === trHi ? nf(trLo, 2) : `${nf(trLo, 2)} ~ ${nf(trHi, 2)}`],
+  ];
+  if (state.model) rows.unshift(["Proyector", state.model[0]]);
+  $("rtable").innerHTML = rows.map(([a, b, main]) =>
+    `<tr class="${main ? "main" : ""}"><td>${a}</td><td>${b}</td></tr>`).join("");
+  $("results").hidden = false;
+  drawDiagram(res);
+  $("results").scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
 
-    const err = !(tr > 0) ? "Introduce un ratio de óptica mayor que 0."
-      : !(input > 0) ? `Introduce ${mode === "dist" ? "un ancho de pantalla" : "una distancia"} mayor que 0.` : "";
-    $("err").textContent = err;
-    if (err) { $("results").innerHTML = ""; $("diagram").innerHTML = ""; $("formula").textContent = ""; return; }
+function drawDiagram(res) {
+  const cs = getComputedStyle(document.documentElement), c = n => cs.getPropertyValue(n).trim();
+  const dist = res.D[0], h = res.H[1];
+  const px = 90, sx = 540, cy = 110;
+  const sh = Math.max(40, Math.min(180, 180 * h / Math.max(h, dist * 0.4)));
+  const top = cy - sh / 2, bot = cy + sh / 2;
+  const lab = cm => state.units === "cm" ? nf(cm, 0) + " cm" : nf(cm / CM_PER_IN, 0) + "″";
+  const dTxt = res.D[0] === res.D[1] ? lab(res.D[0]) : `${lab(res.D[0])} ~ ${lab(res.D[1])}`;
+  const hTxt = Math.abs(res.H[0] - res.H[1]) < .05 ? lab(res.H[0]) : `${lab(res.H[0])} ~ ${lab(res.H[1])}`;
+  $("diagram").innerHTML = `
+    <polygon points="${px},${cy} ${sx},${top} ${sx},${bot}" fill="${c("--accent-soft")}"/>
+    <line x1="${px}" y1="${cy}" x2="${sx}" y2="${top}" stroke="${c("--accent")}" stroke-dasharray="4 4"/>
+    <line x1="${px}" y1="${cy}" x2="${sx}" y2="${bot}" stroke="${c("--accent")}" stroke-dasharray="4 4"/>
+    <rect x="${px - 56}" y="${cy - 17}" width="56" height="34" rx="6" fill="${c("--text")}"/>
+    <circle cx="${px - 4}" cy="${cy}" r="9" fill="${c("--accent")}"/>
+    <line x1="${sx}" y1="${top}" x2="${sx}" y2="${bot}" stroke="${c("--text")}" stroke-width="6"/>
+    <text x="${sx + 12}" y="${cy + 5}" fill="${c("--text")}" font-size="14">H ${hTxt}</text>
+    <line x1="${px}" y1="225" x2="${sx}" y2="225" stroke="${c("--muted")}"/>
+    <line x1="${px}" y1="218" x2="${px}" y2="232" stroke="${c("--muted")}"/>
+    <line x1="${sx}" y1="218" x2="${sx}" y2="232" stroke="${c("--muted")}"/>
+    <text x="${(px + sx) / 2}" y="215" fill="${c("--text")}" font-size="15" font-weight="700" text-anchor="middle">PD ${dTxt}</text>`;
+}
 
-    // Throw ratio = distancia / ancho de imagen
-    let width, widthB = null, dist, distB = null;
-    if (mode === "dist") {
-      width = input; dist = tr * width; if (trMax) distB = trMax * width;
-    } else {
-      dist = input; width = dist / tr; if (trMax) widthB = dist / trMax;
-    }
-    const h = w => w * rh / rw;
-    const diagIn = w => Math.hypot(w, h(w)) * TO_M[unit] / 0.0254;
-    const diagStr = (a, b) => {
-      const s = x => Math.round(diagIn(x)) + "″";
-      return b == null ? s(a) : `${s(Math.min(a, b))} – ${s(Math.max(a, b))}`;
-    };
-
-    const stats = mode === "dist"
-      ? [["Distancia de proyección", range(dist, distB, unit), true],
-         ["Ancho de imagen", fmt(width, unit)],
-         ["Alto de imagen", fmt(h(width), unit)],
-         ["Diagonal", diagStr(width)]]
-      : [["Ancho de pantalla", range(width, widthB, unit), true],
-         ["Alto de imagen", range(h(width), widthB == null ? null : h(widthB), unit)],
-         ["Diagonal", diagStr(width, widthB)],
-         ["Distancia", fmt(dist, unit)]];
-    $("results").innerHTML = stats.map(([k, v, main]) =>
-      `<div class="stat${main ? " main" : ""}"><div class="k">${k}</div><div class="v">${v}</div></div>`).join("");
-
-    $("formula").textContent = mode === "dist"
-      ? `Distancia = ratio de óptica × ancho  →  ${tr} × ${width} = ${+(dist).toFixed(3)} ${unit}`
-      : `Ancho = distancia ÷ ratio de óptica  →  ${dist} ÷ ${tr} = ${+(width).toFixed(3)} ${unit}`;
-
-    drawDiagram(dist, width, h(width), unit);
-  }
-
-  function drawDiagram(dist, w, hgt, unit) {
-    const css = getComputedStyle(document.documentElement);
-    const accent = css.getPropertyValue("--accent"), muted = css.getPropertyValue("--muted"),
-          text = css.getPropertyValue("--text"), soft = css.getPropertyValue("--accent-soft");
-    const px = 80, sx = 520, cy = 105;
-    const screenH = Math.max(40, Math.min(170, 170 * (hgt / Math.max(hgt, dist * 0.35))));
-    const top = cy - screenH / 2, bot = cy + screenH / 2;
-    $("diagram").innerHTML = `
-      <polygon points="${px},${cy} ${sx},${top} ${sx},${bot}" fill="${soft}" opacity=".8"/>
-      <line x1="${px}" y1="${cy}" x2="${sx}" y2="${top}" stroke="${accent}" stroke-dasharray="4 4"/>
-      <line x1="${px}" y1="${cy}" x2="${sx}" y2="${bot}" stroke="${accent}" stroke-dasharray="4 4"/>
-      <rect x="${px - 50}" y="${cy - 16}" width="50" height="32" rx="6" fill="${text}"/>
-      <circle cx="${px - 4}" cy="${cy}" r="8" fill="${accent}"/>
-      <line x1="${sx}" y1="${top}" x2="${sx}" y2="${bot}" stroke="${text}" stroke-width="6"/>
-      <text x="${sx + 12}" y="${cy + 5}" fill="${text}" font-size="13">${fmt(hgt, unit)}</text>
-      <line x1="${px}" y1="205" x2="${sx}" y2="205" stroke="${muted}"/>
-      <line x1="${px}" y1="199" x2="${px}" y2="211" stroke="${muted}"/>
-      <line x1="${sx}" y1="199" x2="${sx}" y2="211" stroke="${muted}"/>
-      <text x="${(px + sx) / 2}" y="198" fill="${text}" font-size="14" text-anchor="middle" font-weight="600">${fmt(dist, unit)}</text>`;
-  }
-
-  $("tab-dist").onclick = () => setMode("dist");
-  $("tab-width").onclick = () => setMode("width");
-  $("form").addEventListener("input", calc);
-  $("unit").addEventListener("change", calc);
-  calc();
+renderList();
 </script>
 </body>
 </html>
