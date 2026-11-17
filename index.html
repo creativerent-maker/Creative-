@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculadora de Proyección</title>
+<style>
+  :root {
+    --bg: #f4f5f7; --card: #ffffff; --text: #1b1e24; --muted: #5f6673;
+    --border: #d9dde3; --accent: #0b6bcb; --accent-soft: #e6f0fb; --error: #b42318;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121418; --card: #1c1f25; --text: #e9ebef; --muted: #9aa1ad;
+      --border: #333842; --accent: #5aa7f2; --accent-soft: #1b2a3b; --error: #f97066;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 1.6rem; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .tab { flex: 1 1 200px; padding: 12px; border: 1px solid var(--border); background: var(--card);
+    color: var(--text); border-radius: 10px; cursor: pointer; font: inherit; font-weight: 600; }
+  .tab[aria-selected="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  fieldset { border: 0; padding: 0; margin: 0 0 16px; }
+  legend, label { font-weight: 600; display: block; margin-bottom: 6px; }
+  .ratios { display: flex; gap: 8px; flex-wrap: wrap; }
+  .ratios label { flex: 1 1 80px; margin: 0; }
+  .ratios input { position: absolute; opacity: 0; }
+  .ratios span { display: block; text-align: center; padding: 10px; border: 1px solid var(--border);
+    border-radius: 8px; cursor: pointer; }
+  .ratios input:checked + span { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+  .ratios input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .field input, .field select { width: 100%; padding: 10px 12px; font: inherit; color: var(--text);
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px; }
+  .hint { font-size: .85rem; color: var(--muted); font-weight: 400; }
+  .error { color: var(--error); font-size: .9rem; min-height: 1.2em; margin: 8px 0 0; }
+  .results { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .stat { background: var(--bg); border-radius: 10px; padding: 12px; }
+  .stat .k { font-size: .85rem; color: var(--muted); }
+  .stat .v { font-size: 1.35rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat.main { background: var(--accent-soft); }
+  .stat.main .v { color: var(--accent); }
+  svg { width: 100%; height: auto; display: block; margin-top: 16px; }
+  .formula { font-size: .9rem; color: var(--muted); margin-top: 12px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Calculadora de distancia de proyección</h1>
+  <p class="sub">Calcula la distancia a partir del ancho de pantalla, o el ancho de pantalla a partir de la distancia.</p>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-dist" aria-selected="true">Calcular distancia</button>
+    <button class="tab" role="tab" id="tab-width" aria-selected="false">Calcular ancho de pantalla</button>
+  </div>
+
+  <form class="card" id="form" onsubmit="return false">
+    <fieldset>
+      <legend>Formato de imagen</legend>
+      <div class="ratios">
+        <label><input type="radio" name="ratio" value="16:9" checked><span>16:9</span></label>
+        <label><input type="radio" name="ratio" value="16:10"><span>16:10</span></label>
+        <label><input type="radio" name="ratio" value="4:3"><span>4:3</span></label>
+      </div>
+    </fieldset>
+
+    <div class="grid">
+      <div class="field">
+        <label for="tr">Ratio de óptica (throw ratio) <span class="hint">p. ej. 1.5</span></label>
+        <input id="tr" type="number" inputmode="decimal" step="0.01" min="0.1" value="1.5">
+      </div>
+      <div class="field">
+        <label for="trMax">Ratio máx. (zoom) <span class="hint">opcional</span></label>
+        <input id="trMax" type="number" inputmode="decimal" step="0.01" min="0.1" placeholder="—">
+      </div>
+      <div class="field" id="wrap-width">
+        <label for="width">Ancho de pantalla</label>
+        <input id="width" type="number" inputmode="decimal" step="0.01" min="0" value="3">
+      </div>
+      <div class="field" id="wrap-dist" hidden>
+        <label for="dist">Distancia de proyección</label>
+        <input id="dist" type="number" inputmode="decimal" step="0.01" min="0" value="4.5">
+      </div>
+      <div class="field">
+        <label for="unit">Unidad</label>
+        <select id="unit">
+          <option value="m">Metros (m)</option>
+          <option value="cm">Centímetros (cm)</option>
+          <option value="in">Pulgadas (in)</option>
+          <option value="ft">Pies (ft)</option>
+        </select>
+      </div>
+    </div>
+    <p class="error" id="err" role="alert"></p>
+  </form>
+
+  <section class="card" aria-live="polite">
+    <div class="results" id="results"></div>
+    <svg id="diagram" viewBox="0 0 600 220" role="img" aria-label="Esquema de proyección"></svg>
+    <p class="formula" id="formula"></p>
+  </section>
+</main>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const RATIOS = { "16:9": [16, 9], "16:10": [16, 10], "4:3": [4, 3] };
+  const TO_M = { m: 1, cm: 0.01, in: 0.0254, ft: 0.3048 };
+  let mode = "dist";
+
+  function fmt(v, unit) {
+    const d = unit === "cm" ? 1 : 2;
+    return v.toLocaleString("es-ES", { minimumFractionDigits: d, maximumFractionDigits: d }) + " " + unit;
+  }
+  function range(a, b, unit) {
+    return b == null ? fmt(a, unit) : fmt(Math.min(a, b), unit).replace(" " + unit, "") + " – " + fmt(Math.max(a, b), unit);
+  }
+
+  function setMode(m) {
+    mode = m;
+    $("tab-dist").setAttribute("aria-selected", m === "dist");
+    $("tab-width").setAttribute("aria-selected", m === "width");
+    $("wrap-width").hidden = m !== "dist";
+    $("wrap-dist").hidden = m !== "width";
+    calc();
+  }
+
+  function calc() {
+    const unit = $("unit").value;
+    const [rw, rh] = RATIOS[document.querySelector("input[name=ratio]:checked").value];
+    const tr = parseFloat($("tr").value);
+    const trMaxRaw = parseFloat($("trMax").value);
+    const trMax = isFinite(trMaxRaw) && trMaxRaw > 0 && trMaxRaw !== tr ? trMaxRaw : null;
+    const input = parseFloat($(mode === "dist" ? "width" : "dist").value);
+
+    const err = !(tr > 0) ? "Introduce un ratio de óptica mayor que 0."
+      : !(input > 0) ? `Introduce ${mode === "dist" ? "un ancho de pantalla" : "una distancia"} mayor que 0.` : "";
+    $("err").textContent = err;
+    if (err) { $("results").innerHTML = ""; $("diagram").innerHTML = ""; $("formula").textContent = ""; return; }
+
+    // Throw ratio = distancia / ancho de imagen
+    let width, widthB = null, dist, distB = null;
+    if (mode === "dist") {
+      width = input; dist = tr * width; if (trMax) distB = trMax * width;
+    } else {
+      dist = input; width = dist / tr; if (trMax) widthB = dist / trMax;
+    }
+    const h = w => w * rh / rw;
+    const diagIn = w => Math.hypot(w, h(w)) * TO_M[unit] / 0.0254;
+    const diagStr = (a, b) => {
+      const s = x => Math.round(diagIn(x)) + "″";
+      return b == null ? s(a) : `${s(Math.min(a, b))} – ${s(Math.max(a, b))}`;
+    };
+
+    const stats = mode === "dist"
+      ? [["Distancia de proyección", range(dist, distB, unit), true],
+         ["Ancho de imagen", fmt(width, unit)],
+         ["Alto de imagen", fmt(h(width), unit)],
+         ["Diagonal", diagStr(width)]]
+      : [["Ancho de pantalla", range(width, widthB, unit), true],
+         ["Alto de imagen", range(h(width), widthB == null ? null : h(widthB), unit)],
+         ["Diagonal", diagStr(width, widthB)],
+         ["Distancia", fmt(dist, unit)]];
+    $("results").innerHTML = stats.map(([k, v, main]) =>
+      `<div class="stat${main ? " main" : ""}"><div class="k">${k}</div><div class="v">${v}</div></div>`).join("");
+
+    $("formula").textContent = mode === "dist"
+      ? `Distancia = ratio de óptica × ancho  →  ${tr} × ${width} = ${+(dist).toFixed(3)} ${unit}`
+      : `Ancho = distancia ÷ ratio de óptica  →  ${dist} ÷ ${tr} = ${+(width).toFixed(3)} ${unit}`;
+
+    drawDiagram(dist, width, h(width), unit);
+  }
+
+  function drawDiagram(dist, w, hgt, unit) {
+    const css = getComputedStyle(document.documentElement);
+    const accent = css.getPropertyValue("--accent"), muted = css.getPropertyValue("--muted"),
+          text = css.getPropertyValue("--text"), soft = css.getPropertyValue("--accent-soft");
+    const px = 80, sx = 520, cy = 105;
+    const screenH = Math.max(40, Math.min(170, 170 * (hgt / Math.max(hgt, dist * 0.35))));
+    const top = cy - screenH / 2, bot = cy + screenH / 2;
+    $("diagram").innerHTML = `
+      <polygon points="${px},${cy} ${sx},${top} ${sx},${bot}" fill="${soft}" opacity=".8"/>
+      <line x1="${px}" y1="${cy}" x2="${sx}" y2="${top}" stroke="${accent}" stroke-dasharray="4 4"/>
+      <line x1="${px}" y1="${cy}" x2="${sx}" y2="${bot}" stroke="${accent}" stroke-dasharray="4 4"/>
+      <rect x="${px - 50}" y="${cy - 16}" width="50" height="32" rx="6" fill="${text}"/>
+      <circle cx="${px - 4}" cy="${cy}" r="8" fill="${accent}"/>
+      <line x1="${sx}" y1="${top}" x2="${sx}" y2="${bot}" stroke="${text}" stroke-width="6"/>
+      <text x="${sx + 12}" y="${cy + 5}" fill="${text}" font-size="13">${fmt(hgt, unit)}</text>
+      <line x1="${px}" y1="205" x2="${sx}" y2="205" stroke="${muted}"/>
+      <line x1="${px}" y1="199" x2="${px}" y2="211" stroke="${muted}"/>
+      <line x1="${sx}" y1="199" x2="${sx}" y2="211" stroke="${muted}"/>
+      <text x="${(px + sx) / 2}" y="198" fill="${text}" font-size="14" text-anchor="middle" font-weight="600">${fmt(dist, unit)}</text>`;
+  }
+
+  $("tab-dist").onclick = () => setMode("dist");
+  $("tab-width").onclick = () => setMode("width");
+  $("form").addEventListener("input", calc);
+  $("unit").addEventListener("change", calc);
+  calc();
+</script>
+</body>
+</html>
