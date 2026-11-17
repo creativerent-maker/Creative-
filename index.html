@@ -56,6 +56,9 @@
   tr.main td:last-child { color: var(--accent); font-size: 1.15rem; }
   svg { width: 100%; height: auto; display: block; margin-top: 14px; }
   .note { color: var(--muted); font-size: .8rem; margin-top: 12px; }
+  .helper { margin-top: 14px; border-top: 1px solid var(--border); padding-top: 12px; }
+  .helper summary { cursor: pointer; color: var(--accent); font-weight: 600; font-size: .92rem; }
+  #m-out b { color: var(--text); font-size: 1.05rem; }
   [hidden] { display: none !important; }
 </style>
 </head>
@@ -87,9 +90,20 @@
     <span class="lbl">Ratio de óptica (throw ratio)</span>
     <div class="grid2">
       <input id="trMin" type="number" inputmode="decimal" step="0.01" min="0.1" value="1.5" aria-label="Ratio de óptica mínimo">
-      <input id="trMax" type="number" inputmode="decimal" step="0.01" min="0.1" placeholder="máx. (zoom, opcional)" aria-label="Ratio de óptica máximo">
+      <input id="trMax" type="number" inputmode="decimal" step="0.01" min="0.1" placeholder="Máx. (zoom)" aria-label="Ratio de óptica máximo">
     </div>
     <p class="hint">Ratio = distancia ÷ ancho de imagen. Si la óptica tiene zoom, indica el mínimo y el máximo.</p>
+
+    <details class="helper">
+      <summary>¿Tu proyector no indica el ratio de óptica? Calcúlalo midiendo</summary>
+      <p class="hint" style="margin:8px 0 10px">Coloca el proyector, proyecta y mide la distancia hasta la pantalla y el ancho de la imagen (en las unidades elegidas).</p>
+      <div class="grid2">
+        <div><label class="lbl" for="m-dist">Distancia medida</label><input id="m-dist" type="number" inputmode="decimal" step="any" min="0"></div>
+        <div><label class="lbl" for="m-width">Ancho de imagen medido</label><input id="m-width" type="number" inputmode="decimal" step="any" min="0"></div>
+      </div>
+      <p class="hint" id="m-out" style="margin-top:10px"></p>
+      <button class="btn ghost" id="m-use" type="button" hidden>Usar este ratio</button>
+    </details>
   </section>
 
   <section class="card">
@@ -145,6 +159,21 @@ $("units").addEventListener("click", e => {
   if (state.input) calculate();
 });
 ["trMin", "trMax"].forEach(id => $(id).addEventListener("input", () => { if (state.input) calculate(); }));
+
+/* ---------- Ratio a partir de una medición ---------- */
+let measuredTR = null;
+function updateMeasured() {
+  const d = parseFloat($("m-dist").value), w = parseFloat($("m-width").value);
+  measuredTR = d > 0 && w > 0 ? d / w : null;
+  $("m-out").innerHTML = measuredTR ? `Ratio de óptica: <b>${nf(measuredTR, 2)}</b> (${nf(d, 2)} ÷ ${nf(w, 2)})` : "";
+  $("m-use").hidden = !measuredTR;
+}
+["m-dist", "m-width"].forEach(id => $(id).addEventListener("input", updateMeasured));
+$("m-use").addEventListener("click", () => {
+  $("trMin").value = +measuredTR.toFixed(2); $("trMax").value = "";
+  if (state.input) calculate();
+  $("trMin").focus();
+});
 
 /* ---------- Un solo campo activo ---------- */
 fields().forEach(inp => {
