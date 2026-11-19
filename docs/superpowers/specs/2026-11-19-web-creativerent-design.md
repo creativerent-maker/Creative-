@@ -1,6 +1,6 @@
 # Web nueva de Creative Rent (creativerent.es): diseño
 
-Fecha: 19/11/2026 · Estado: borrador para aprobación
+Fecha: 19/11/2026 · Estado: pendiente de aprobación
 
 ## 1. Intención
 
@@ -184,8 +184,8 @@ En móvil, los bloques se apilan en una columna y el menú pasa a ser un botón 
 - El cambio de dominio es **el último paso de la publicación**.
 
 **Pasos obligatorios, en este orden** (los pasos 2 a 6 solo después de esa confirmación):
-1. Antes de tocar nada, confirmar con el propietario dónde quiere tener el email (§11).
-2. Si el email se queda en Webempresa, cambiar el MX a un nombre de servidor propio de Webempresa (por ejemplo `mail.creativerent.es`, con su registro A a `213.158.86.115`). Comprobar que se envía y se recibe correo **antes** de mover la web.
+1. El email **se queda en Webempresa** (decidido por el propietario). Se mantiene ese hosting solo para el correo.
+2. Cambiar el MX a un nombre de servidor propio de Webempresa (por ejemplo `mail.creativerent.es`, con su registro A a `213.158.86.115`). Comprobar que se envía y se recibe correo **antes** de mover la web.
 3. Mantener el registro SPF existente y revisar DKIM y DMARC. Añadir al SPF el proveedor que envíe los emails del formulario.
 4. Bajar el TTL de los registros 24 h antes del cambio.
 5. Publicar la web nueva en una URL de pruebas. Cuando el propietario la apruebe, añadir la zona de creativerent.es a Cloudflare y copiar **todos** los registros existentes (MX, SPF, DKIM, los de webmail, etc.). Comprobar que coinciden y después cambiar los servidores de nombres en el registrador. Por último, conectar `creativerent.es` y `www` al sitio.
@@ -204,7 +204,7 @@ En móvil, los bloques se apilan en una columna y el menú pasa a ser un botón 
 | `/trabajos-realizados/` | `/trabajos/` |
 | `/contacto/` | `/contacto/` |
 | `/cookie-policy/` | `/cookies/` |
-| `/project/<slug>/` | `/trabajos/<slug>/` si ese trabajo se migra; si no, `/trabajos/` |
+| `/project/<slug>/` | `/trabajos/` |
 | `/feed/`, `/comments/feed/`, `/category/*`, `/author/*`, `/?attachment_id=*` | `/` |
 
 **creativerent.net**
@@ -213,9 +213,20 @@ En móvil, los bloques se apilan en una columna y el menú pasa a ser un botón 
 - `/gracias` → `/contacto/`.
 - El resto → la página equivalente o, si no hay, `/`.
 
-**Trabajos antiguos:** en la web actual hay 57, de 2012 a 2019. Cuáles se migran lo decide el propietario (§11). Los que se migren conservan su slug, para que su redirección sea directa. Sus fotos se descargan de la web actual y se optimizan.
+**Trabajos antiguos: no se migran** (decidido por el propietario). Los 57 trabajos de 2012 a 2019 se han quedado desfasados técnicamente. Todos los `/project/<slug>/` redirigen con 301 a `/trabajos/`.
 
-Para los trabajos migrados, el desarrollador deduce el tipo de cliente y los servicios a partir del título y las fotos, y redacta un texto breve **solo en castellano**. Los títulos ya dicen el tipo de acto y el lugar. El propietario revisa el resultado en una lista. *(propuesta)* Los trabajos antiguos no se marcan como destacados, así que no salen en la portada.
+**Requisito para publicar:** como la web arranca sin trabajos antiguos, antes del lanzamiento el propietario sube desde el panel **al menos 4 trabajos recientes con fotos reales**, que son los que salen en la portada. Si al acabar la web aún no hay 4, se publica igualmente: el bloque «Trabajos recientes» se oculta automáticamente mientras haya menos de 4 trabajos publicados, y la página `/trabajos/` muestra los que haya.
+
+## 9 bis. Calendario
+
+No hay fecha límite, pero el propietario no quiere que el proyecto se alargue. Se publica todo junto (los tres idiomas), sin fases, y se evita ampliar el alcance durante la construcción: lo que surja nuevo se apunta para después del lanzamiento.
+
+Orden de trabajo:
+1. Web y panel en la URL de pruebas, con material de muestra.
+2. Revisión del propietario.
+3. Material real (fotos, logos y al menos 4 trabajos).
+4. Textos legales con sus datos fiscales.
+5. Confirmación del propietario y cambio de dominio, como último paso.
 
 ## 10. Lo que queda a criterio del desarrollador
 
@@ -230,12 +241,10 @@ Para los trabajos migrados, el desarrollador deduce el tipo de cliente y los ser
 
 ## 11. Pendiente del propietario
 
-1. **Email:** ¿sigue en Webempresa o se traslada (por ejemplo, a Google Workspace o Microsoft 365)? ¿Se mantiene el hosting de Webempresa solo para el correo?
 2. **Kit Digital:** ¿el acuerdo con BeeDIGITAL obliga a mantener creativerent.net activo hasta alguna fecha? Esto marca cuándo se puede redirigir.
 3. **Licencia web de Amplesoft Pro:** ¿la tienen? Si no, se usa Exo 2.
-4. **Trabajos antiguos:** ¿se migran todos, una selección o ninguno?
-5. **Material:** foto de portada en horizontal, fotos de trabajos, logos de clientes (con permiso para mostrarlos) y logo de la empresa en vectorial.
+5. **Material:** foto de portada en horizontal, al menos 4 trabajos recientes con fotos, logos de clientes (con permiso para mostrarlos) y logo de la empresa en vectorial.
 6. **Datos fiscales** para los textos legales, y confirmación de la dirección (C/ Campsrodons, nave 14).
 7. **Cuenta de GitHub** de cada persona que vaya a usar el panel.
-8. **Accesos:** ¿quién puede entrar al panel de Webempresa y al registrador de creativerent.es? ¿creativerent.net está registrado a nombre de la empresa o lo controla BeeDIGITAL?
-9. **Fecha de lanzamiento:** ¿hay alguna fecha límite (renovación de Webempresa, temporada de eventos, Kit Digital)? Si la hay, se publica primero en castellano y el catalán, el inglés y los trabajos antiguos llegan después.
+8. **Accesos** (solo se necesitan en el paso final): ¿quién puede entrar al panel de Webempresa y al registrador de creativerent.es? ¿creativerent.net está registrado a nombre de la empresa o lo controla BeeDIGITAL?
+
