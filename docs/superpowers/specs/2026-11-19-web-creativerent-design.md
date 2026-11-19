@@ -241,10 +241,9 @@ Orden de trabajo:
 
 ## 11. Pendiente del propietario
 
-2. **Kit Digital:** ¿el acuerdo con BeeDIGITAL obliga a mantener creativerent.net activo hasta alguna fecha? Esto marca cuándo se puede redirigir.
-3. **Licencia web de Amplesoft Pro:** ¿la tienen? Si no, se usa Exo 2.
-5. **Material:** foto de portada en horizontal, al menos 4 trabajos recientes con fotos, logos de clientes (con permiso para mostrarlos) y logo de la empresa en vectorial.
-6. **Datos fiscales** para los textos legales, y confirmación de la dirección (C/ Campsrodons, nave 14).
-7. **Cuenta de GitHub** de cada persona que vaya a usar el panel.
-8. **Accesos** (solo se necesitan en el paso final): ¿quién puede entrar al panel de Webempresa y al registrador de creativerent.es? ¿creativerent.net está registrado a nombre de la empresa o lo controla BeeDIGITAL?
-
+1. **Kit Digital:** ¿el acuerdo con BeeDIGITAL obliga a mantener creativerent.net activo hasta alguna fecha? Esto marca cuándo se puede redirigir.
+2. **Licencia web de Amplesoft Pro:** ¿la tienen? Si no, se usa Exo 2.
+3. **Material:** foto de portada en horizontal, al menos 4 trabajos recientes con fotos, logos de clientes (con permiso para mostrarlos) y logo de la empresa en vectorial.
+4. **Datos fiscales** para los textos legales, y confirmación de la dirección (C/ Campsrodons, nave 14).
+5. **Cuenta de GitHub** de cada persona que vaya a usar el panel.
+6. **Accesos** (solo se necesitan en el paso final): ¿quién puede entrar al panel de Webempresa y al registrador de creativerent.es? ¿creativerent.net está registrado a nombre de la empresa o lo controla BeeDIGITAL?
