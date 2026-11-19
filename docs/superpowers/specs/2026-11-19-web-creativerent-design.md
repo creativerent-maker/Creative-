@@ -178,7 +178,12 @@ En móvil, los bloques se apilan en una columna y el menú pasa a ser un botón 
 
 **Consecuencia:** si se cambia el registro A de creativerent.es al nuevo alojamiento sin hacer nada más, **el correo dejará de llegar**, porque el MX apunta a ese mismo nombre.
 
-**Pasos obligatorios, en este orden:**
+**Regla del propietario: el dominio se toca solo al final y con su confirmación.**
+- Se prepara y se prueba todo en una URL de pruebas: la web, el panel, el formulario y las redirecciones.
+- No se modifica ningún registro DNS, servidor de nombres, MX, hosting ni configuración de creativerent.es ni de creativerent.net hasta que el propietario lo confirme de forma explícita, justo antes de publicar.
+- El cambio de dominio es **el último paso de la publicación**.
+
+**Pasos obligatorios, en este orden** (los pasos 2 a 6 solo después de esa confirmación):
 1. Antes de tocar nada, confirmar con el propietario dónde quiere tener el email (§11).
 2. Si el email se queda en Webempresa, cambiar el MX a un nombre de servidor propio de Webempresa (por ejemplo `mail.creativerent.es`, con su registro A a `213.158.86.115`). Comprobar que se envía y se recibe correo **antes** de mover la web.
 3. Mantener el registro SPF existente y revisar DKIM y DMARC. Añadir al SPF el proveedor que envíe los emails del formulario.
