@@ -9,7 +9,9 @@ import { siteEnv } from '../lib/works';
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
-const showPhoto = !(siteEnv() === 'production' && ajustes.portada.ejemplo);
+// Las fotos de muestra viven en src/assets/ejemplo/ y nunca se publican en producción.
+const isExample = ajustes.portada.foto.includes('/assets/ejemplo/');
+const showPhoto = !(siteEnv() === 'production' && isExample);
 const foto = showPhoto ? assetFromSettings(ajustes.portada.foto) : undefined;
 ---
 <section class="hero">

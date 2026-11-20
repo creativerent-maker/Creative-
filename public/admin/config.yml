@@ -1,0 +1,183 @@
+# Panel de edición de creativerent.es (Sveltia CMS). Ver README.md.
+backend:
+  name: github
+  repo: creativerent-maker/Creative-
+  branch: main
+  # URL del worker sveltia-cms-auth en la cuenta de Cloudflare de la empresa (pendiente, ver docs/LANZAMIENTO.md)
+  base_url: https://sveltia-cms-auth.example.workers.dev
+  commit_messages:
+    create: "Panel: nuevo {{collection}} «{{slug}}»"
+    update: "Panel: actualizado {{collection}} «{{slug}}»"
+    delete: "Panel: eliminado {{collection}} «{{slug}}»"
+    uploadMedia: "Panel: foto «{{path}}»"
+
+site_url: https://creativerent.es
+media_folder: /src/assets/trabajos
+public_folder: /src/assets/trabajos
+
+media_libraries:
+  default:
+    config:
+      transformations:
+        raster_image:
+          format: webp
+          quality: 85
+          width: 2400
+          height: 2400
+        svg:
+          optimize: true
+
+collections:
+  - name: trabajos
+    label: "Trabajos"
+    label_singular: "trabajo"
+    description: "Los trabajos que aparecen en la web. Los 4 más recientes (o los marcados para portada) salen en la página de inicio."
+    folder: src/content/trabajos
+    format: json
+    create: true
+    delete: true
+    slug: "{{es.titulo}}"
+    summary: "{{es.titulo}} · {{fecha | date('DD/MM/YYYY')}}"
+    sortable_fields: [fecha]
+    media_folder: /src/assets/trabajos
+    public_folder: ../../assets/trabajos
+    fields:
+      - name: es
+        label: "Castellano"
+        widget: object
+        fields:
+          - { name: titulo, label: "Título", widget: string }
+          - { name: texto, label: "Texto", widget: text, hint: "Qué se hizo: espacio, servicios, duración. 2-4 frases." }
+      - { name: fecha, label: "Fecha del acto", widget: datetime, time_format: false, format: "YYYY-MM-DD" }
+      - { name: lugar, label: "Lugar", widget: string, hint: "Por ejemplo: Palau de Congressos de Tarragona" }
+      - name: tipoCliente
+        label: "Tipo de cliente"
+        widget: select
+        options:
+          - { label: "Ayuntamientos", value: ayuntamientos }
+          - { label: "Instituciones públicas", value: instituciones }
+          - { label: "Empresas", value: empresas }
+          - { label: "Centros de congresos", value: congresos }
+      - name: servicios
+        label: "Servicios"
+        widget: select
+        multiple: true
+        options:
+          - { label: "Alquiler de material audiovisual", value: alquiler-material-audiovisual }
+          - { label: "Pantallas LED", value: pantallas-led }
+          - { label: "Streaming y eventos híbridos", value: streaming }
+          - { label: "Infraestructura", value: infraestructura }
+          - { label: "Producción completa", value: produccion-completa }
+          - { label: "Mapping", value: mapping }
+          - { label: "Postproducción y contenidos", value: postproduccion }
+          - { label: "Personal técnico", value: personal-tecnico }
+      - { name: portada, label: "Foto principal", widget: image, hint: "La que sale en las tarjetas. Mejor en horizontal." }
+      - { name: portadaAlt, label: "Descripción de la foto", widget: string, required: false, hint: "Qué se ve en la foto, para personas ciegas y para Google." }
+      - { name: galeria, label: "Más fotos", widget: image, multiple: true, required: false }
+      - { name: destacado, label: "¿Mostrar en portada?", widget: boolean, default: false, required: false }
+      - { name: publicado, label: "¿Publicado?", widget: boolean, default: true, required: false, hint: "Desmárcalo para guardarlo sin que se vea en la web." }
+      - name: ca
+        label: "Català (opcional)"
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - { name: titulo, label: "Título", widget: string, required: false }
+          - { name: texto, label: "Texto", widget: text, required: false, hint: "Qué se hizo: espacio, servicios, duración. 2-4 frases." }
+      - name: en
+        label: "English (opcional)"
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - { name: titulo, label: "Título", widget: string, required: false }
+          - { name: texto, label: "Texto", widget: text, required: false, hint: "Qué se hizo: espacio, servicios, duración. 2-4 frases." }
+
+  - name: clientes
+    label: "Clientes"
+    label_singular: "cliente"
+    description: "Logos del carrusel «Han confiado en nosotros». Sube solo logos con permiso del cliente."
+    folder: src/content/clientes
+    format: json
+    create: true
+    delete: true
+    slug: "{{nombre}}"
+    summary: "{{nombre}}"
+    media_folder: /src/assets/clientes
+    public_folder: ../../assets/clientes
+    fields:
+      - { name: nombre, label: "Nombre", widget: string }
+      - { name: logo, label: "Logo", widget: image, hint: "SVG o PNG con fondo transparente." }
+      - { name: enlace, label: "Web del cliente", widget: string, required: false }
+      - { name: orden, label: "Orden", widget: number, value_type: int, default: 99, required: false }
+
+  - name: servicios
+    label: "Servicios"
+    label_singular: "servicio"
+    description: "Los 8 servicios. Se pueden editar los textos, pero no crear ni borrar servicios."
+    folder: src/content/servicios
+    format: json
+    create: false
+    delete: false
+    summary: "{{es.titulo}}"
+    media_folder: /src/assets/servicios
+    public_folder: ../../assets/servicios
+    fields:
+      - { name: orden, label: "Orden", widget: hidden }
+      - { name: foto, label: "Foto", widget: image, required: false }
+      - name: es
+        label: "Castellano"
+        widget: object
+        collapsed: false
+        fields:
+          - { name: slug, label: "Dirección web", widget: hidden }
+          - { name: titulo, label: "Nombre", widget: string }
+          - { name: frase, label: "Frase corta", widget: string }
+          - { name: texto, label: "Texto", widget: text }
+          - { name: incluye, label: "Qué incluye", widget: list, field: { name: item, label: "Elemento", widget: string } }
+      - name: ca
+        label: "Català"
+        widget: object
+        collapsed: true
+        fields:
+          - { name: slug, label: "Dirección web", widget: hidden }
+          - { name: titulo, label: "Nombre", widget: string }
+          - { name: frase, label: "Frase corta", widget: string }
+          - { name: texto, label: "Texto", widget: text }
+          - { name: incluye, label: "Qué incluye", widget: list, field: { name: item, label: "Elemento", widget: string } }
+      - name: en
+        label: "English"
+        widget: object
+        collapsed: true
+        fields:
+          - { name: slug, label: "Dirección web", widget: hidden }
+          - { name: titulo, label: "Nombre", widget: string }
+          - { name: frase, label: "Frase corta", widget: string }
+          - { name: texto, label: "Texto", widget: text }
+          - { name: incluye, label: "Qué incluye", widget: list, field: { name: item, label: "Elemento", widget: string } }
+
+  - name: ajustes
+    label: "Ajustes"
+    files:
+      - name: ajustes
+        label: "Datos de contacto y portada"
+        file: src/content/ajustes.json
+        format: json
+        media_folder: /src/assets/portada
+        public_folder: ../assets/portada
+        fields:
+          - { name: telefono, label: "Teléfono fijo", widget: string }
+          - { name: movil, label: "Móvil y WhatsApp", widget: string }
+          - { name: email, label: "Email", widget: string }
+          - { name: direccion, label: "Dirección", widget: string }
+          - { name: cp, label: "Código postal", widget: string }
+          - { name: localidad, label: "Localidad", widget: string }
+          - { name: provincia, label: "Provincia", widget: string }
+          - { name: mapa, label: "Enlace al mapa", widget: string }
+          - { name: crealuxe, label: "Web de Crealuxe FX", widget: string }
+          - name: portada
+            label: "Foto de portada"
+            widget: object
+            fields:
+              - { name: foto, label: "Foto", widget: image, hint: "Horizontal, de un montaje vuestro. Mínimo 1920 px de ancho." }
+              - { name: fotoAlt, label: "Descripción de la foto", widget: string }

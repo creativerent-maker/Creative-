@@ -10,7 +10,6 @@
   "crealuxe": "https://www.crealuxefx.com",
   "portada": {
     "foto": "../assets/ejemplo/portada.jpg",
-    "fotoAlt": "Auditorio con pantallas LED y escenario durante un congreso",
-    "ejemplo": true
+    "fotoAlt": "Auditorio con pantallas LED y escenario durante un congreso"
   }
 }
