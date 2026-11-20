@@ -1,0 +1,40 @@
+---
+import { Image } from 'astro:assets';
+import type { Locale } from '../i18n/routes';
+import { localizedPath } from '../i18n/routes';
+import { t } from '../i18n/ui';
+import ajustes from '../content/ajustes.json';
+import { assetFromSettings } from '../lib/images';
+import { siteEnv } from '../lib/works';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const showPhoto = !(siteEnv() === 'production' && ajustes.portada.ejemplo);
+const foto = showPhoto ? assetFromSettings(ajustes.portada.foto) : undefined;
+---
+<section class="hero">
+  {foto && <Image src={foto} alt={ajustes.portada.fotoAlt} widths={[640, 1024, 1440, 1920]} sizes="100vw" loading="eager" fetchpriority="high" class="bg" />}
+  <div class="shade" aria-hidden="true"></div>
+  <div class="wrap copy">
+    <p class="kicker">{t(locale, 'hero.kicker')}</p>
+    <h1>{t(locale, 'hero.title')}</h1>
+    <p class="text">{t(locale, 'hero.text')}</p>
+    <div class="row">
+      <a class="btn" href={localizedPath('contacto', locale) + '#presupuesto'}>{t(locale, 'cta.presupuesto')}</a>
+      <a class="btn btn--light" href={localizedPath('trabajos', locale)}>{t(locale, 'cta.verTrabajos')}</a>
+    </div>
+  </div>
+</section>
+<style>
+  .hero { position: relative; background: var(--navy-deep); color: #fff; overflow: hidden; display: flex; align-items: flex-end; min-height: clamp(460px, 62vh, 640px); }
+  .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(35,35,64,.92) 0%, rgba(49,49,81,.66) 48%, rgba(49,49,81,.12) 100%); }
+  .copy { position: relative; display: grid; gap: 1.25rem; padding-block: clamp(3rem, 2rem + 5vw, 5.5rem); width: 100%; }
+  .copy > * { max-width: 40rem; }
+  .kicker { color: var(--orange-soft); }
+  h1 { font-size: var(--fs-2xl); line-height: 1.06; }
+  .text { font-size: var(--fs-lg); color: rgba(255,255,255,.88); line-height: 1.5; }
+  @media (max-width: 640px) {
+    .shade { background: linear-gradient(0deg, rgba(35,35,64,.95) 0%, rgba(35,35,64,.75) 55%, rgba(49,49,81,.35) 100%); }
+  }
+</style>

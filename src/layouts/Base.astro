@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import type { Locale } from '../i18n/routes';
 import { t } from '../i18n/ui';
+import { getServicios } from '../lib/content';
 
 export interface Alternate { locale: Locale | 'x-default'; href: string }
 interface Props {
@@ -19,6 +20,7 @@ interface Props {
 }
 const { title, description, locale, alternates, canonical, ogImage = '/brand/og-default.jpg', noindex = false, langLinks } = Astro.props;
 const links = { ...Object.fromEntries(alternates.filter((a) => a.locale !== 'x-default').map((a) => [a.locale, a.href])), ...langLinks } as Partial<Record<Locale, string>>;
+const footerServicios = (await getServicios(locale)).map((s) => ({ href: s.href, titulo: s.t.titulo }));
 const site = Astro.site!;
 const abs = (p: string) => new URL(p, site).href;
 const fullTitle = title === t(locale, 'site.name') ? `${title} · ${t(locale, 'site.tagline').replace(/\.$/, '')}` : `${title} · Creative Rent`;
@@ -52,6 +54,6 @@ const ogLocale = { es: 'es_ES', ca: 'ca_ES', en: 'en_GB' }[locale];
     <main id="main">
       <slot />
     </main>
-    <Footer locale={locale} />
+    <Footer locale={locale} servicios={footerServicios} />
   </body>
 </html>

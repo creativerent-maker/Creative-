@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import ForBand from '../components/ForBand.astro';
+import ServiceCards from '../components/ServiceCards.astro';
+import RecentWorks from '../components/RecentWorks.astro';
+import ClientMarquee from '../components/ClientMarquee.astro';
+import CtaBand from '../components/CtaBand.astro';
+import type { Locale } from '../i18n/routes';
+import { t } from '../i18n/ui';
+import { getServicios, getWorks } from '../lib/content';
+import { recentWorks } from '../lib/works';
+import { pageAlternates, hrefFor } from '../lib/seo';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const servicios = await getServicios(locale);
+const recientes = recentWorks(await getWorks());
+const alternates = pageAlternates('home');
+---
+<Base title={t(locale, 'site.name')} description={t(locale, 'meta.home')} locale={locale} alternates={alternates} canonical={hrefFor(alternates, locale)}>
+  <Hero locale={locale} />
+  <ForBand locale={locale} />
+  <ServiceCards locale={locale} servicios={servicios} heading={t(locale, 'home.queHacemos')} />
+  <RecentWorks locale={locale} works={recientes} />
+  <ClientMarquee locale={locale} />
+  <CtaBand locale={locale} />
+</Base>

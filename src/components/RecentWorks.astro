@@ -1,0 +1,29 @@
+---
+import WorkCard from './WorkCard.astro';
+import { localizedPath, type Locale } from '../i18n/routes';
+import { t } from '../i18n/ui';
+import type { Work } from '../lib/content';
+interface Props { locale: Locale; works: Work[] }
+const { locale, works } = Astro.props;
+---
+{works.length > 0 && (
+  <section class="section recent">
+    <div class="wrap">
+      <div class="head">
+        <h2>{t(locale, 'home.recientes')}</h2>
+        <a href={localizedPath('trabajos', locale)}>{t(locale, 'cta.verTodos')} →</a>
+      </div>
+      <div class="grid">{works.map((w) => <WorkCard work={w} locale={locale} />)}</div>
+    </div>
+  </section>
+)}
+<style>
+  .recent { padding-top: 0; }
+  .head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  h2 { font-size: var(--fs-xl); }
+  .head a { color: var(--orange-ink); font-weight: 700; text-decoration: none; font-size: var(--fs-sm); }
+  .head a:hover { text-decoration: underline; }
+  .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.25rem; }
+  @media (max-width: 1000px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 520px) { .grid { grid-template-columns: 1fr; } }
+</style>

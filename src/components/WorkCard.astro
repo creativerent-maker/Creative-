@@ -1,0 +1,34 @@
+---
+import { Image } from 'astro:assets';
+import { localizedPath, type Locale } from '../i18n/routes';
+import { t } from '../i18n/ui';
+import { getServicios, type Work } from '../lib/content';
+import { localizeWork } from '../lib/works';
+
+interface Props { work: Work; locale: Locale; headingLevel?: 'h2' | 'h3' }
+const { work, locale, headingLevel = 'h3' } = Astro.props;
+const H = headingLevel;
+const { titulo } = localizeWork(work, locale);
+const servicios = await getServicios(locale);
+const nombres = work.servicios.map((id) => servicios.find((s) => s.id === id)?.t.titulo).filter(Boolean);
+const href = localizedPath('trabajos', locale, work.slug);
+---
+<article class="work-card" data-tipo={work.tipoCliente} data-servicios={work.servicios.join(' ')}>
+  <a href={href}>
+    <div class="img">
+      <Image src={work.portada} alt={work.portadaAlt || titulo} widths={[400, 640, 900]} sizes="(max-width: 520px) 100vw, (max-width: 1000px) 50vw, 25vw" />
+      {work.ejemplo && <span class="tag">Ejemplo</span>}
+    </div>
+    <H class="name">{titulo}</H>
+    <p class="meta">{t(locale, `tipo.${work.tipoCliente}`)} · {nombres.join(', ')}</p>
+  </a>
+</article>
+<style>
+  .work-card a { display: grid; gap: .45rem; text-decoration: none; }
+  .img { position: relative; border-radius: var(--radius); overflow: hidden; aspect-ratio: 4 / 3; background: var(--surface-2); }
+  .img :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+  .work-card a:hover .img :global(img) { transform: scale(1.03); }
+  .tag { position: absolute; top: .6rem; left: .6rem; background: rgba(255,255,255,.92); color: var(--navy); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; padding: .2rem .5rem; border-radius: 3px; }
+  .name { font-size: 1.05rem; margin-top: .35rem; }
+  .meta { font-size: var(--fs-xs); color: var(--muted); }
+</style>

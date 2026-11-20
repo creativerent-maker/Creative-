@@ -1,0 +1,26 @@
+---
+import { localizedPath, type Locale } from '../i18n/routes';
+import { t } from '../i18n/ui';
+import { contact } from '../lib/contact';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+---
+<section class="cta">
+  <div class="wrap inner">
+    <div class="copy">
+      <h2>{t(locale, 'home.ctaTitle')}</h2>
+      <p>{t(locale, 'home.ctaText')}</p>
+    </div>
+    <div class="row">
+      <a class="btn btn--navy" href={localizedPath('contacto', locale) + '#presupuesto'}>{t(locale, 'cta.presupuesto')}</a>
+      <a class="btn btn--light" href={contact.whatsapp} rel="noopener">{t(locale, 'cta.whatsapp')} {contact.movil}</a>
+    </div>
+  </div>
+</section>
+<style>
+  .cta { background: var(--grad); color: #fff; }
+  .inner { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem 2.5rem; flex-wrap: wrap; padding-block: 2.75rem; }
+  .copy { display: grid; gap: .5rem; max-width: 40rem; }
+  h2 { font-size: var(--fs-xl); }
+  p { opacity: .95; }
+</style>

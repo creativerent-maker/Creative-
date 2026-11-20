@@ -5,3 +5,5 @@ dist/
 .wrangler/
 .env
 test-results/
+dist-preview/
+dist-prod/
