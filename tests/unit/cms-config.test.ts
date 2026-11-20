@@ -43,3 +43,12 @@ describe('Sveltia CMS config', () => {
     expect(t).toMatchObject({ format: 'webp', width: 2400, height: 2400 });
   });
 });
+
+describe('Sveltia CMS config (review fixes)', () => {
+  it('slugs are ASCII without accents (URLs sin tildes)', () => {
+    expect(cfg.slug).toMatchObject({ encoding: 'ascii', clean_accents: true });
+  });
+  it('empty optional fields are omitted so the schema never sees ""', () => {
+    expect(cfg.output?.omit_empty_optional_fields).toBe(true);
+  });
+});

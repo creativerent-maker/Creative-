@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import CtaBand from '../components/CtaBand.astro';
 import { localizedPath, type Locale } from '../i18n/routes';
@@ -23,10 +23,10 @@ const paragraphs = texto.split(/\n\s*\n/).filter(Boolean);
   </div>
   <div class="wrap layout">
     <div class="main">
-      <Image src={work.portada} alt={work.portadaAlt || titulo} widths={[640, 1024, 1600]} sizes="(max-width: 900px) 100vw, 66vw" loading="eager" class="cover" />
+      <Picture formats={['avif', 'webp']} src={work.portada} alt={work.portadaAlt || titulo} widths={[640, 1024, 1600]} sizes="(max-width: 900px) 100vw, 66vw" loading="eager" class="cover" />
       <div class="prose" lang={translated ? locale : 'es'}>{paragraphs.map((p) => <p>{p}</p>)}</div>
       {work.galeria.length > 0 && (
-        <div class="gallery">{work.galeria.map((g, i) => <Image src={g} alt={`${titulo} · ${i + 1}`} widths={[480, 960]} sizes="(max-width: 900px) 50vw, 33vw" />)}</div>
+        <div class="gallery">{work.galeria.map((g, i) => <Picture formats={['avif', 'webp']} src={g} alt={`${titulo} · ${i + 1}`} widths={[480, 960]} sizes="(max-width: 900px) 50vw, 33vw" />)}</div>
       )}
     </div>
     <aside class="facts">

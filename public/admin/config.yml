@@ -12,6 +12,16 @@ backend:
     uploadMedia: "Panel: foto «{{path}}»"
 
 site_url: https://creativerent.es
+
+# URLs sin tildes ni eñes
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: '-'
+
+# No escribir campos opcionales vacíos (""), que romperían la validación del contenido
+output:
+  omit_empty_optional_fields: true
 media_folder: /src/assets/trabajos
 public_folder: /src/assets/trabajos
 

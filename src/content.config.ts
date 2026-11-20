@@ -3,10 +3,14 @@ import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import { servicioIds, tiposCliente } from './lib/works';
 
+// En producción no se cargan las entradas de ejemplo (ni se emiten sus imágenes).
+const PROD = process.env.SITE_ENV === 'production';
+const entries = PROD ? ['*.json', '!ejemplo-*.json'] : '*.json';
+
 const texto = z.object({ titulo: z.string().optional(), texto: z.string().optional() });
 
 const trabajos = defineCollection({
-  loader: glob({ pattern: '*.json', base: './src/content/trabajos' }),
+  loader: glob({ pattern: entries, base: './src/content/trabajos' }),
   schema: ({ image }) =>
     z.object({
       fecha: z.coerce.date(),
@@ -46,13 +50,13 @@ const servicios = defineCollection({
 });
 
 const clientes = defineCollection({
-  loader: glob({ pattern: '*.json', base: './src/content/clientes' }),
+  loader: glob({ pattern: entries, base: './src/content/clientes' }),
   schema: ({ image }) =>
     z.object({
       nombre: z.string(),
       logo: image(),
-      enlace: z.string().url().optional(),
-      orden: z.number().default(99),
+      enlace: z.union([z.literal(''), z.string().url()]).optional(),
+      orden: z.preprocess((v) => (v === '' || v === null ? undefined : v), z.number().default(99)),
       ejemplo: z.boolean().optional(),
     }),
 });

@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import { localizedPath, type Locale } from '../i18n/routes';
 import { t } from '../i18n/ui';
 import { getServicios, type Work } from '../lib/content';
@@ -16,7 +16,7 @@ const href = localizedPath('trabajos', locale, work.slug);
 <article class="work-card" data-tipo={work.tipoCliente} data-servicios={work.servicios.join(' ')}>
   <a href={href}>
     <div class="img">
-      <Image src={work.portada} alt={work.portadaAlt || titulo} widths={[400, 640, 900]} sizes="(max-width: 520px) 100vw, (max-width: 1000px) 50vw, 25vw" />
+      <Picture formats={['avif', 'webp']} src={work.portada} alt={work.portadaAlt || titulo} widths={[400, 640, 900]} sizes="(max-width: 520px) 100vw, (max-width: 1000px) 50vw, 25vw" />
       {work.ejemplo && <span class="tag">Ejemplo</span>}
     </div>
     <H class="name">{titulo}</H>
