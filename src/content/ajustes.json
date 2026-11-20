@@ -1,0 +1,16 @@
+{
+  "telefono": "977 199 720",
+  "movil": "639 654 816",
+  "email": "info@creativerent.es",
+  "direccion": "C/ Campsrodons, nave 14",
+  "cp": "43110",
+  "localidad": "La Canonja",
+  "provincia": "Tarragona",
+  "mapa": "https://www.google.com/maps/search/?api=1&query=Carrer+dels+Campsrodons+La+Canonja+Tarragona",
+  "crealuxe": "https://www.crealuxefx.com",
+  "portada": {
+    "foto": "../assets/ejemplo/portada.jpg",
+    "fotoAlt": "Auditorio con pantallas LED y escenario durante un congreso",
+    "ejemplo": true
+  }
+}

@@ -1,0 +1,65 @@
+---
+import { localizedPath, localeRoot, type Locale } from '../i18n/routes';
+import { t } from '../i18n/ui';
+import { contact } from '../lib/contact';
+
+interface Props { locale: Locale; servicios?: { href: string; titulo: string }[] }
+const { locale, servicios = [] } = Astro.props;
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="wrap cols">
+    <div class="brand">
+      <a href={localeRoot(locale)}><img src="/brand/logo-h-neg.svg" alt="Creative Rent, servicios audiovisuales" width="190" height="45" loading="lazy" /></a>
+      <p>{t(locale, 'site.tagline')}</p>
+    </div>
+    <div>
+      <h2>{t(locale, 'footer.contacto')}</h2>
+      <p>
+        <a href={contact.telHref}>{contact.telefono}</a> · <a href={contact.whatsapp} rel="noopener">{contact.movil}</a><br />
+        <a href={contact.mailHref}>{contact.email}</a><br />
+        {contact.direccion}<br />
+        {contact.cp} {contact.localidad} ({contact.provincia})
+      </p>
+    </div>
+    <div>
+      <h2>{t(locale, 'footer.servicios')}</h2>
+      <ul>
+        {servicios.map((s) => <li><a href={s.href}>{s.titulo}</a></li>)}
+        {servicios.length === 0 && <li><a href={localizedPath('servicios', locale)}>{t(locale, 'nav.servicios')}</a></li>}
+      </ul>
+    </div>
+    <div>
+      <h2>{t(locale, 'footer.empresa')}</h2>
+      <ul>
+        <li><a href={localizedPath('trabajos', locale)}>{t(locale, 'nav.trabajos')}</a></li>
+        <li><a href={localizedPath('crealuxe', locale)}>{t(locale, 'nav.crealuxe')}</a></li>
+        <li><a href={localizedPath('calculadora', locale)}>{t(locale, 'herramientas.calculadora')}</a></li>
+        <li><a href={localizedPath('contacto', locale)}>{t(locale, 'nav.contacto')}</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap legal">
+    <p>© {year} Creative Rent. {t(locale, 'footer.derechos')}</p>
+    <ul>
+      <li><a href={localizedPath('aviso-legal', locale)}>{t(locale, 'legal.aviso-legal')}</a></li>
+      <li><a href={localizedPath('privacidad', locale)}>{t(locale, 'legal.privacidad')}</a></li>
+      <li><a href={localizedPath('cookies', locale)}>{t(locale, 'legal.cookies')}</a></li>
+      <li><a href={localizedPath('accesibilidad', locale)}>{t(locale, 'legal.accesibilidad')}</a></li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .site-footer { background: var(--navy); color: rgba(255,255,255,.78); font-size: var(--fs-sm); line-height: 1.75; }
+  .cols { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 2rem; padding-block: 3rem 2.5rem; }
+  .brand img { width: 190px; margin-bottom: .9rem; }
+  h2 { font-size: 1rem; color: #fff; margin-bottom: .6rem; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  a { text-decoration: none; color: inherit; }
+  a:hover { color: #fff; text-decoration: underline; }
+  .legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 1.5rem; padding-block: 1.25rem 1.75rem; border-top: 1px solid rgba(255,255,255,.12); font-size: var(--fs-xs); }
+  .legal ul { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; }
+  @media (max-width: 860px) { .cols { grid-template-columns: 1fr 1fr; } .brand { grid-column: 1 / -1; } }
+  @media (max-width: 480px) { .cols { grid-template-columns: 1fr; } }
+</style>

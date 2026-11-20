@@ -1,0 +1,103 @@
+/* Creative Rent — tokens de marca (manual de identidad corporativa) */
+@import '@fontsource/exo-2/latin-600.css';
+@import '@fontsource/exo-2/latin-700.css';
+@import '@fontsource/roboto/latin-400.css';
+@import '@fontsource/roboto/latin-500.css';
+@import '@fontsource/roboto/latin-700.css';
+
+:root {
+  /* Color */
+  --orange: #f26241;        /* Pantone 171C · principal */
+  --orange-ink: #c9472a;    /* naranja oscurecido para texto sobre blanco (AA) */
+  --orange-soft: #f8a28d;   /* naranja sobre azul */
+  --navy: #313151;          /* Pantone 533C · secundario */
+  --navy-deep: #232340;
+  --magenta: #ff4158;       /* Pantone 1787C · solo en degradados */
+  --grad: linear-gradient(100deg, var(--magenta), var(--orange));
+  --ink: #313151;
+  --muted: #5d5d75;
+  --line: #e3e3ec;
+  --surface: #ffffff;
+  --surface-2: #f6f6fa;
+
+  /* Tipografía — cambiar --font-display a Amplesoft Pro si hay licencia web */
+  --font-display: 'Exo 2', 'Trebuchet MS', system-ui, sans-serif;
+  --font-body: 'Roboto', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --fs-xs: 0.8125rem;
+  --fs-sm: 0.9375rem;
+  --fs-md: 1.0625rem;
+  --fs-lg: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --fs-xl: clamp(1.6rem, 1.3rem + 1.4vw, 2.1rem);
+  --fs-2xl: clamp(2rem, 1.4rem + 2.8vw, 3.25rem);
+
+  /* Layout */
+  --wrap: 1200px;
+  --gutter: max(20px, env(safe-area-inset-left, 0px));
+  --radius: 6px;
+  --section: clamp(3rem, 2rem + 4vw, 5rem);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--ink);
+  font: 400 var(--fs-md)/1.6 var(--font-body);
+}
+img, svg { max-width: 100%; height: auto; display: block; }
+h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 700; line-height: 1.12; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
+
+.wrap {
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-left: var(--gutter);
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+}
+.section { padding-block: var(--section); }
+.kicker {
+  font: 700 var(--fs-xs)/1.2 var(--font-body);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--orange-ink);
+}
+.lead { font-size: var(--fs-lg); color: var(--muted); max-width: 62ch; line-height: 1.5; }
+.prose { max-width: 70ch; }
+.prose > * + * { margin-top: 1em; }
+.prose h2 { font-size: var(--fs-lg); margin-top: 2em; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5em;
+  min-height: 48px; padding: .75em 1.3em;
+  border-radius: 4px; border: 0;
+  font: 700 var(--fs-sm)/1 var(--font-body);
+  text-decoration: none; cursor: pointer; white-space: nowrap;
+  background: var(--orange); color: #fff;
+  transition: background-color .15s, color .15s, box-shadow .15s;
+}
+.btn:hover { background: var(--orange-ink); }
+.btn--ghost { background: transparent; color: var(--navy); box-shadow: inset 0 0 0 1.5px var(--navy); }
+.btn--ghost:hover { background: var(--navy); color: #fff; }
+.btn--light { background: transparent; color: #fff; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.85); }
+.btn--light:hover { background: #fff; color: var(--navy); }
+.btn--navy { background: var(--navy); }
+.btn--navy:hover { background: var(--navy-deep); }
+.row { display: flex; flex-wrap: wrap; gap: .75rem; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+.skip { position: absolute; left: 1rem; top: -100px; z-index: 100; background: var(--navy); color: #fff; padding: .75rem 1rem; }
+.skip:focus { top: 1rem; }
+
+.page-head { padding-block: clamp(2.5rem, 2rem + 3vw, 4.5rem) clamp(1.5rem, 1rem + 2vw, 2.5rem); display: grid; gap: 1rem; }
+.page-head h1 { font-size: var(--fs-2xl); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
