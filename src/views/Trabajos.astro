@@ -1,0 +1,79 @@
+---
+import Base from '../layouts/Base.astro';
+import WorkCard from '../components/WorkCard.astro';
+import CtaBand from '../components/CtaBand.astro';
+import type { Locale } from '../i18n/routes';
+import { t } from '../i18n/ui';
+import { getServicios, getWorks } from '../lib/content';
+import { tiposCliente } from '../lib/works';
+import { pageAlternates, hrefFor } from '../lib/seo';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const alternates = pageAlternates('trabajos');
+const works = await getWorks();
+const servicios = (await getServicios(locale)).filter((s) => works.some((w) => w.servicios.includes(s.id)));
+const tipos = tiposCliente.filter((k) => works.some((w) => w.tipoCliente === k));
+---
+<Base title={t(locale, 'trabajos.title')} description={t(locale, 'trabajos.intro')} locale={locale} alternates={alternates} canonical={hrefFor(alternates, locale)}>
+  <div class="wrap page-head">
+    <h1>{t(locale, 'trabajos.title')}</h1>
+    <p class="lead">{t(locale, 'trabajos.intro')}</p>
+  </div>
+  <div class="wrap section list">
+    {works.length === 0 ? (
+      <p class="empty">{t(locale, 'trabajos.vacio')}</p>
+    ) : (
+      <>
+        <div class="filters" data-filters>
+          <div class="group" role="group" aria-label={t(locale, 'trabajos.filtroTipo')}>
+            <button type="button" data-filter="tipo" data-value="" aria-pressed="true">{t(locale, 'trabajos.todos')}</button>
+            {tipos.map((k) => <button type="button" data-filter="tipo" data-value={k} aria-pressed="false">{t(locale, `tipo.${k}`)}</button>)}
+          </div>
+          {servicios.length > 1 && (
+            <div class="group" role="group" aria-label={t(locale, 'trabajos.filtroServicio')}>
+              <button type="button" data-filter="servicio" data-value="" aria-pressed="true">{t(locale, 'trabajos.todos')}</button>
+              {servicios.map((s) => <button type="button" data-filter="servicio" data-value={s.id} aria-pressed="false">{s.t.titulo}</button>)}
+            </div>
+          )}
+        </div>
+        <div class="grid" data-grid>{works.map((w) => <WorkCard work={w} locale={locale} headingLevel="h2" />)}</div>
+        <p class="none" data-none hidden>{t(locale, 'trabajos.ninguno')}</p>
+      </>
+    )}
+  </div>
+  <CtaBand locale={locale} />
+</Base>
+<script>
+  const root = document.querySelector('[data-filters]');
+  if (root) {
+    const state: Record<string, string> = { tipo: '', servicio: '' };
+    const cards = [...document.querySelectorAll<HTMLElement>('[data-grid] .work-card')];
+    const none = document.querySelector<HTMLElement>('[data-none]');
+    root.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-filter]');
+      if (!b) return;
+      const f = b.dataset.filter!;
+      state[f] = b.dataset.value ?? '';
+      root.querySelectorAll<HTMLButtonElement>(`button[data-filter="${f}"]`).forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      let shown = 0;
+      for (const c of cards) {
+        const ok = (!state.tipo || c.dataset.tipo === state.tipo) && (!state.servicio || (c.dataset.servicios ?? '').split(' ').includes(state.servicio));
+        c.hidden = !ok;
+        if (ok) shown++;
+      }
+      if (none) none.hidden = shown > 0;
+    });
+  }
+</script>
+<style>
+  .list { padding-top: 0; }
+  .filters { display: grid; gap: .75rem; margin-bottom: 2rem; }
+  .group { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .group button { min-height: 40px; padding: .45rem .95rem; border-radius: 999px; border: 1px solid var(--line); background: #fff; font: 500 var(--fs-sm) var(--font-body); color: var(--ink); cursor: pointer; }
+  .group button[aria-pressed='true'] { background: var(--navy); border-color: var(--navy); color: #fff; }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem 1.25rem; }
+  .grid :global(.work-card[hidden]) { display: none; }
+  .empty, .none { color: var(--muted); font-size: var(--fs-lg); max-width: 60ch; }
+  @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 520px) { .grid { grid-template-columns: 1fr; } }
+</style>

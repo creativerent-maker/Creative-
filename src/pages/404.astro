@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import { localizedPath } from '../i18n/routes';
+import { t } from '../i18n/ui';
+const locale = 'es' as const;
+---
+<Base title={t(locale, '404.title')} description={t(locale, '404.text')} locale={locale} alternates={[]} canonical="/404/" noindex>
+  <div class="wrap section nf">
+    <p class="kicker">404</p>
+    <h1>{t(locale, '404.title')}</h1>
+    <p class="lead">{t(locale, '404.text')}</p>
+    <ul class="row">
+      <li><a class="btn btn--ghost" href={localizedPath('servicios', locale)}>{t(locale, 'nav.servicios')}</a></li>
+      <li><a class="btn btn--ghost" href={localizedPath('trabajos', locale)}>{t(locale, 'nav.trabajos')}</a></li>
+      <li><a class="btn" href={localizedPath('contacto', locale)}>{t(locale, 'nav.contacto')}</a></li>
+    </ul>
+    <p class="other" lang="ca"><a href="/ca/">Català</a> · <a href="/en/" lang="en">English</a></p>
+  </div>
+</Base>
+<style>
+  .nf { display: grid; gap: 1.25rem; min-height: 50vh; align-content: center; }
+  .nf h1 { font-size: var(--fs-2xl); }
+  ul { list-style: none; margin: 0; padding: 0; }
+  .other { color: var(--muted); font-size: var(--fs-sm); }
+</style>

@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactForm from '../components/ContactForm.astro';
+import type { Locale } from '../i18n/routes';
+import { t } from '../i18n/ui';
+import { contact } from '../lib/contact';
+import { pageAlternates, hrefFor } from '../lib/seo';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const alternates = pageAlternates('contacto');
+---
+<Base title={t(locale, 'contacto.title')} description={t(locale, 'contacto.lead')} locale={locale} alternates={alternates} canonical={hrefFor(alternates, locale)}>
+  <div class="wrap page-head">
+    <h1>{t(locale, 'contacto.title')}</h1>
+    <p class="lead">{t(locale, 'contacto.lead')}</p>
+  </div>
+  <div class="wrap section layout">
+    <ContactForm locale={locale} />
+    <aside class="data">
+      <h2>{t(locale, 'contacto.datos')}</h2>
+      <dl>
+        <dt>{t(locale, 'contacto.telefono')}</dt><dd><a href={contact.telHref}>{contact.telefono}</a></dd>
+        <dt>{t(locale, 'contacto.movil')}</dt><dd><a href={contact.movilHref}>{contact.movil}</a> · <a href={contact.whatsapp} rel="noopener">WhatsApp</a></dd>
+        <dt>{t(locale, 'contacto.email')}</dt><dd><a href={contact.mailHref}>{contact.email}</a></dd>
+        <dt>{t(locale, 'contacto.direccion')}</dt><dd>{contact.direccion}<br />{contact.cp} {contact.localidad} ({contact.provincia})<br /><a href={contact.mapa} rel="noopener">{t(locale, 'contacto.mapa')} ↗</a></dd>
+      </dl>
+    </aside>
+  </div>
+</Base>
+<style>
+  .layout { padding-top: 0; display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 2.5rem; align-items: start; }
+  .data h2 { font-size: var(--fs-lg); margin-bottom: 1rem; }
+  dl { margin: 0; display: grid; gap: .25rem; }
+  dt { font-size: var(--fs-xs); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 1rem; }
+  dt:first-child { margin-top: 0; }
+  dd { margin: 0; font-size: var(--fs-md); line-height: 1.55; }
+  dd a { color: var(--ink); }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+</style>

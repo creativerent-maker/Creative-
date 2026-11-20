@@ -1,0 +1,49 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import { locales, localizedPath, type Locale } from '../i18n/routes';
+import { getWorks, type Work } from '../lib/content';
+import type { ServicioId } from '../lib/works';
+import Servicios from '../views/Servicios.astro';
+import Servicio from '../views/Servicio.astro';
+import Trabajos from '../views/Trabajos.astro';
+import Trabajo from '../views/Trabajo.astro';
+import Crealuxe from '../views/Crealuxe.astro';
+import Contacto from '../views/Contacto.astro';
+import Calculadora from '../views/Calculadora.astro';
+import Legal from '../views/Legal.astro';
+
+type View =
+  | { view: 'servicios' | 'trabajos' | 'crealuxe' | 'contacto' | 'calculadora'; locale: Locale }
+  | { view: 'servicio'; locale: Locale; id: ServicioId }
+  | { view: 'trabajo'; locale: Locale; work: Work }
+  | { view: 'legal'; locale: Locale; doc: 'aviso-legal' | 'privacidad' | 'cookies' | 'accesibilidad' };
+
+export const getStaticPaths = (async () => {
+  const route = (path: string) => path.replace(/^\/|\/$/g, '');
+  const servicios = await getCollection('servicios');
+  const works = await getWorks();
+  const paths: { params: { route: string }; props: View }[] = [];
+  for (const locale of locales) {
+    for (const view of ['servicios', 'trabajos', 'crealuxe', 'contacto', 'calculadora'] as const)
+      paths.push({ params: { route: route(localizedPath(view, locale)) }, props: { view, locale } });
+    for (const doc of ['aviso-legal', 'privacidad', 'cookies', 'accesibilidad'] as const)
+      paths.push({ params: { route: route(localizedPath(doc, locale)) }, props: { view: 'legal', locale, doc } });
+    for (const s of servicios)
+      paths.push({ params: { route: route(localizedPath('servicios', locale, s.data[locale].slug)) }, props: { view: 'servicio', locale, id: s.id as ServicioId } });
+    for (const work of works)
+      paths.push({ params: { route: route(localizedPath('trabajos', locale, work.slug)) }, props: { view: 'trabajo', locale, work } });
+  }
+  return paths;
+}) satisfies GetStaticPaths;
+
+const p = Astro.props as View;
+---
+{p.view === 'servicios' && <Servicios locale={p.locale} />}
+{p.view === 'servicio' && <Servicio locale={p.locale} id={p.id} />}
+{p.view === 'trabajos' && <Trabajos locale={p.locale} />}
+{p.view === 'trabajo' && <Trabajo locale={p.locale} work={p.work} />}
+{p.view === 'crealuxe' && <Crealuxe locale={p.locale} />}
+{p.view === 'contacto' && <Contacto locale={p.locale} />}
+{p.view === 'calculadora' && <Calculadora locale={p.locale} />}
+{p.view === 'legal' && <Legal locale={p.locale} doc={p.doc} />}

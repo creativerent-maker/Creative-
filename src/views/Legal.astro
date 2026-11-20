@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import type { Locale, PageKey } from '../i18n/routes';
+import { t, type UiKey } from '../i18n/ui';
+import { pageAlternates, hrefFor } from '../lib/seo';
+type LegalKey = 'aviso-legal' | 'privacidad' | 'cookies' | 'accesibilidad';
+interface Props { locale: Locale; doc: LegalKey }
+const { locale, doc } = Astro.props;
+const files = import.meta.glob<{ Content: any; rawContent: () => string }>('../content/legal/*.md', { eager: true });
+const file = files[`../content/legal/${doc}.${locale}.md`];
+const { Content } = file;
+const hasPlaceholders = /\[(RAZÓN SOCIAL|CIF|DOMICILIO SOCIAL)\]/.test(file.rawContent());
+const alternates = pageAlternates(doc as PageKey);
+const title = t(locale, `legal.${doc}` as UiKey);
+---
+<Base title={title} description={title} locale={locale} alternates={alternates} canonical={hrefFor(alternates, locale)} noindex={hasPlaceholders}>
+  <div class="wrap section"><article class="prose legal"><Content /></article></div>
+</Base>
+<style>
+  .legal :global(h1) { font-size: var(--fs-2xl); margin-bottom: .5em; }
+  .legal :global(ul) { padding-left: 1.2em; }
+</style>

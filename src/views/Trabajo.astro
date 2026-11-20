@@ -1,0 +1,59 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { localizedPath, type Locale } from '../i18n/routes';
+import { t } from '../i18n/ui';
+import { getServicios, type Work } from '../lib/content';
+import { localizeWork, workAlternates } from '../lib/works';
+interface Props { locale: Locale; work: Work }
+const { locale, work } = Astro.props;
+const { titulo, texto, translated } = localizeWork(work, locale);
+const alt = workAlternates(work);
+const servicios = (await getServicios(locale)).filter((s) => work.servicios.includes(s.id));
+const langLinks = { es: localizedPath('trabajos', 'es', work.slug), ca: localizedPath('trabajos', 'ca', work.slug), en: localizedPath('trabajos', 'en', work.slug) };
+const fecha = work.fecha.toLocaleDateString({ es: 'es-ES', ca: 'ca-ES', en: 'en-GB' }[locale], { month: 'long', year: 'numeric' });
+const paragraphs = texto.split(/\n\s*\n/).filter(Boolean);
+---
+<Base title={titulo} description={(paragraphs[0] ?? titulo).slice(0, 160)} locale={locale} alternates={alt.hreflang} canonical={alt.canonicalByLocale[locale]} langLinks={langLinks} ogImage={undefined}>
+  <div class="wrap page-head">
+    <a class="crumb" href={localizedPath('trabajos', locale)}>{t(locale, 'trabajos.volver')}</a>
+    <h1>{titulo}</h1>
+    {!translated && <p class="note" lang="es">{t(locale, 'trabajos.sinTraducir')}</p>}
+  </div>
+  <div class="wrap layout">
+    <div class="main">
+      <Image src={work.portada} alt={work.portadaAlt || titulo} widths={[640, 1024, 1600]} sizes="(max-width: 900px) 100vw, 66vw" loading="eager" class="cover" />
+      <div class="prose" lang={translated ? locale : 'es'}>{paragraphs.map((p) => <p>{p}</p>)}</div>
+      {work.galeria.length > 0 && (
+        <div class="gallery">{work.galeria.map((g, i) => <Image src={g} alt={`${titulo} · ${i + 1}`} widths={[480, 960]} sizes="(max-width: 900px) 50vw, 33vw" />)}</div>
+      )}
+    </div>
+    <aside class="facts">
+      <dl>
+        <dt>{t(locale, 'trabajos.cliente')}</dt><dd>{t(locale, `tipo.${work.tipoCliente}`)}</dd>
+        <dt>{t(locale, 'trabajos.lugar')}</dt><dd>{work.lugar}</dd>
+        <dt>{t(locale, 'trabajos.fecha')}</dt><dd>{fecha}</dd>
+        {servicios.length > 0 && <><dt>{t(locale, 'trabajos.servicios')}</dt><dd><ul>{servicios.map((s) => <li><a href={s.href}>{s.t.titulo}</a></li>)}</ul></dd></>}
+      </dl>
+    </aside>
+  </div>
+  <CtaBand locale={locale} />
+</Base>
+<style>
+  .crumb { color: var(--orange-ink); font-weight: 700; font-size: var(--fs-sm); text-decoration: none; }
+  .crumb::before { content: '← '; }
+  .note { color: var(--muted); font-size: var(--fs-sm); }
+  .layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 2.5rem; align-items: start; padding-bottom: var(--section); }
+  .main { display: grid; gap: 1.75rem; }
+  .cover { width: 100%; border-radius: var(--radius); }
+  .gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
+  .gallery :global(img) { border-radius: var(--radius); aspect-ratio: 4/3; object-fit: cover; width: 100%; }
+  .facts { background: var(--surface-2); border-radius: var(--radius); padding: 1.5rem 1.75rem; position: sticky; top: 1rem; }
+  dl { margin: 0; display: grid; gap: .3rem; }
+  dt { font-size: var(--fs-xs); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: .8rem; }
+  dt:first-child { margin-top: 0; }
+  dd { margin: 0; font-weight: 500; }
+  dd ul { list-style: none; margin: 0; padding: 0; }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .facts { position: static; } .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>

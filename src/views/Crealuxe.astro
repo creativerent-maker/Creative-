@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import CtaBand from '../components/CtaBand.astro';
+import type { Locale } from '../i18n/routes';
+import { t } from '../i18n/ui';
+import { contact } from '../lib/contact';
+import { pageAlternates, hrefFor } from '../lib/seo';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const alternates = pageAlternates('crealuxe');
+---
+<Base title={t(locale, 'crealuxe.title')} description={t(locale, 'crealuxe.lead')} locale={locale} alternates={alternates} canonical={hrefFor(alternates, locale)}>
+  <div class="wrap page-head">
+    <h1>{t(locale, 'crealuxe.title')}</h1>
+    <p class="lead">{t(locale, 'crealuxe.lead')}</p>
+  </div>
+  <div class="wrap section body">
+    <div class="prose">
+      <p>{t(locale, 'crealuxe.text')}</p>
+      <p><a class="btn btn--ghost" href={contact.crealuxe} rel="noopener">{t(locale, 'crealuxe.link')} ↗</a></p>
+    </div>
+  </div>
+  <CtaBand locale={locale} />
+</Base>
+<style>.body { padding-top: 0; }</style>

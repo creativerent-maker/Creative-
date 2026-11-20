@@ -1,0 +1,67 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import WorkCard from '../components/WorkCard.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { localizedPath, type Locale } from '../i18n/routes';
+import { t } from '../i18n/ui';
+import { getServicios, getWorks } from '../lib/content';
+import type { ServicioId } from '../lib/works';
+import { pageAlternates, hrefFor } from '../lib/seo';
+interface Props { locale: Locale; id: ServicioId }
+const { locale, id } = Astro.props;
+const all = await getServicios(locale);
+const s = all.find((x) => x.id === id)!;
+const alternates = pageAlternates('servicios', s.slugs);
+const works = (await getWorks()).filter((w) => w.servicios.includes(id)).slice(0, 3);
+const otros = all.filter((x) => x.id !== id);
+const paragraphs = s.t.texto.split(/\n\s*\n/);
+---
+<Base title={s.t.titulo} description={`${s.t.frase} ${paragraphs[0]}`.slice(0, 160)} locale={locale} alternates={alternates} canonical={hrefFor(alternates, locale)}>
+  <div class="wrap page-head">
+    <a class="crumb" href={localizedPath('servicios', locale)}>{t(locale, 'nav.servicios')}</a>
+    <h1>{s.t.titulo}</h1>
+    <p class="lead">{s.t.frase}</p>
+  </div>
+  <div class="wrap body">
+    <div class="prose">
+      {paragraphs.map((p) => <p>{p}</p>)}
+      <a class="btn" href={localizedPath('contacto', locale) + '#presupuesto'}>{t(locale, 'cta.presupuesto')}</a>
+    </div>
+    {s.t.incluye.length > 0 && (
+      <aside class="incluye">
+        <ul>{s.t.incluye.map((i) => <li>{i}</li>)}</ul>
+      </aside>
+    )}
+  </div>
+  {s.foto && <div class="wrap"><Image src={s.foto} alt={s.t.titulo} widths={[640, 1200]} sizes="(max-width: 1200px) 100vw, 1200px" class="foto" /></div>}
+  {works.length > 0 && (
+    <section class="wrap section">
+      <h2 class="h2">{t(locale, 'servicios.relacionados')}</h2>
+      <div class="grid">{works.map((w) => <WorkCard work={w} locale={locale} />)}</div>
+    </section>
+  )}
+  <section class="wrap section otros">
+    <h2 class="h2">{t(locale, 'servicios.otros')}</h2>
+    <ul>{otros.map((o) => <li><a href={o.href}>{o.t.titulo}</a></li>)}</ul>
+  </section>
+  <CtaBand locale={locale} />
+</Base>
+<style>
+  .crumb { color: var(--orange-ink); font-weight: 700; font-size: var(--fs-sm); text-decoration: none; }
+  .crumb::before { content: '← '; }
+  .body { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 2.5rem; align-items: start; padding-bottom: var(--section); }
+  .prose .btn { margin-top: 1.5rem; }
+  .incluye { background: var(--surface-2); border-radius: var(--radius); padding: 1.5rem 1.75rem; }
+  .incluye ul { margin: 0; padding: 0; list-style: none; display: grid; gap: .7rem; }
+  .incluye li { padding-left: 1.4rem; position: relative; }
+  .incluye li::before { content: ''; position: absolute; left: 0; top: .6em; width: .6rem; height: 3px; background: var(--orange); border-radius: 2px; }
+  .foto { border-radius: var(--radius); width: 100%; }
+  .h2 { font-size: var(--fs-xl); margin-bottom: 1.5rem; }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
+  .otros { padding-top: 0; }
+  .otros ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .6rem; }
+  .otros a { display: inline-block; padding: .55rem .9rem; border: 1px solid var(--line); border-radius: 999px; text-decoration: none; font-size: var(--fs-sm); }
+  .otros a:hover { border-color: var(--orange); }
+  @media (max-width: 860px) { .body, .grid { grid-template-columns: 1fr; } }
+</style>

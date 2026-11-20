@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import ServiceCards from '../components/ServiceCards.astro';
+import CtaBand from '../components/CtaBand.astro';
+import type { Locale } from '../i18n/routes';
+import { t } from '../i18n/ui';
+import { getServicios } from '../lib/content';
+import { pageAlternates, hrefFor } from '../lib/seo';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const alternates = pageAlternates('servicios');
+const servicios = await getServicios(locale);
+---
+<Base title={t(locale, 'servicios.title')} description={t(locale, 'servicios.intro')} locale={locale} alternates={alternates} canonical={hrefFor(alternates, locale)}>
+  <div class="wrap page-head">
+    <p class="kicker">{t(locale, 'hero.kicker')}</p>
+    <h1>{t(locale, 'servicios.title')}</h1>
+    <p class="lead">{t(locale, 'servicios.intro')}</p>
+  </div>
+  <div class="cards"><ServiceCards locale={locale} servicios={servicios} /></div>
+  <CtaBand locale={locale} />
+</Base>
+<style>.cards :global(.section) { padding-top: 0; }</style>

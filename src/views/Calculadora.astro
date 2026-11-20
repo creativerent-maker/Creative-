@@ -1,0 +1,227 @@
+---
+import Base from '../layouts/Base.astro';
+import type { Locale } from '../i18n/routes';
+import { t } from '../i18n/ui';
+import { pageAlternates, hrefFor } from '../lib/seo';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const alternates = pageAlternates('calculadora');
+
+const S = {
+  es: {
+    sub: 'Indica el formato y el ratio de óptica. Después rellena uno de los campos (ancho, altura, diagonal o distancia) y pulsa Calcular.',
+    s1: 'Formato y óptica', units: 'Unidades', inches: 'Pulgadas', aspect: 'Relación de aspecto', tr: 'Ratio de óptica (throw ratio)',
+    trMin: 'Ratio de óptica mínimo', trMax: 'Máx. (zoom)', trHint: 'Ratio = distancia ÷ ancho de imagen. Si la óptica tiene zoom, indica el mínimo y el máximo.',
+    helper: '¿Tu proyector no indica el ratio de óptica? Calcúlalo midiendo',
+    helperHint: 'Coloca el proyector, proyecta y mide la distancia hasta la pantalla y el ancho de la imagen (en las unidades elegidas).',
+    mDist: 'Distancia medida', mWidth: 'Ancho de imagen medido', use: 'Usar este ratio', measured: 'Ratio de óptica',
+    s2: 'Indica una medida', s2Hint: 'Rellena solo uno: ancho, altura o diagonal de la pantalla, o la distancia de proyección.',
+    width: 'Ancho', height: 'Altura', diag: 'Diagonal', dist: 'Distancia de proyección',
+    calc: 'Calcular', reset: 'Empezar de nuevo', results: 'Resultados',
+    note: 'Solo para estimación. Confirma el ratio de óptica en la ficha técnica de tu proyector.',
+    errTr: 'Introduce un ratio de óptica mayor que 0.', errNone: 'Indica una medida en alguno de los campos.', errVal: 'Debe ser un valor mayor que 0.',
+    rPD: 'Distancia de proyección (PD)', rW: 'Ancho (W)', rH: 'Altura (H)', rD: 'Diagonal (D)', rAspect: 'Relación de aspecto', rTr: 'Ratio de óptica', diagram: 'Esquema de proyección',
+  },
+  ca: {
+    sub: 'Indica el format i el ràtio d’òptica. Després omple un dels camps (amplada, alçada, diagonal o distància) i prem Calcula.',
+    s1: 'Format i òptica', units: 'Unitats', inches: 'Polzades', aspect: 'Relació d’aspecte', tr: 'Ràtio d’òptica (throw ratio)',
+    trMin: 'Ràtio d’òptica mínim', trMax: 'Màx. (zoom)', trHint: 'Ràtio = distància ÷ amplada d’imatge. Si l’òptica té zoom, indica el mínim i el màxim.',
+    helper: 'El teu projector no indica el ràtio d’òptica? Calcula’l mesurant',
+    helperHint: 'Col·loca el projector, projecta i mesura la distància fins a la pantalla i l’amplada de la imatge (en les unitats triades).',
+    mDist: 'Distància mesurada', mWidth: 'Amplada d’imatge mesurada', use: 'Fes servir aquest ràtio', measured: 'Ràtio d’òptica',
+    s2: 'Indica una mesura', s2Hint: 'Omple només un camp: amplada, alçada o diagonal de la pantalla, o la distància de projecció.',
+    width: 'Amplada', height: 'Alçada', diag: 'Diagonal', dist: 'Distància de projecció',
+    calc: 'Calcula', reset: 'Torna a començar', results: 'Resultats',
+    note: 'Només per a estimació. Confirma el ràtio d’òptica a la fitxa tècnica del teu projector.',
+    errTr: 'Introdueix un ràtio d’òptica superior a 0.', errNone: 'Indica una mesura en algun dels camps.', errVal: 'Ha de ser un valor superior a 0.',
+    rPD: 'Distància de projecció (PD)', rW: 'Amplada (W)', rH: 'Alçada (H)', rD: 'Diagonal (D)', rAspect: 'Relació d’aspecte', rTr: 'Ràtio d’òptica', diagram: 'Esquema de projecció',
+  },
+  en: {
+    sub: 'Choose the format and the throw ratio. Then fill in one field (width, height, diagonal or distance) and press Calculate.',
+    s1: 'Format and lens', units: 'Units', inches: 'Inches', aspect: 'Aspect ratio', tr: 'Throw ratio',
+    trMin: 'Minimum throw ratio', trMax: 'Max (zoom)', trHint: 'Throw ratio = distance ÷ image width. If the lens has a zoom, enter the minimum and the maximum.',
+    helper: 'Projector doesn’t state its throw ratio? Work it out by measuring',
+    helperHint: 'Place the projector, project an image and measure the distance to the screen and the image width (in the chosen units).',
+    mDist: 'Measured distance', mWidth: 'Measured image width', use: 'Use this ratio', measured: 'Throw ratio',
+    s2: 'Enter one measurement', s2Hint: 'Fill in only one: screen width, height or diagonal, or the throw distance.',
+    width: 'Width', height: 'Height', diag: 'Diagonal', dist: 'Throw distance',
+    calc: 'Calculate', reset: 'Start again', results: 'Results',
+    note: 'For estimation only. Check the throw ratio in your projector’s specification sheet.',
+    errTr: 'Enter a throw ratio greater than 0.', errNone: 'Enter a measurement in one of the fields.', errVal: 'Must be greater than 0.',
+    rPD: 'Throw distance (PD)', rW: 'Width (W)', rH: 'Height (H)', rD: 'Diagonal (D)', rAspect: 'Aspect ratio', rTr: 'Throw ratio', diagram: 'Projection diagram',
+  },
+}[locale];
+const numLocale = { es: 'es-ES', ca: 'ca-ES', en: 'en-GB' }[locale];
+---
+<Base title={t(locale, 'calc.title')} description={S.sub} locale={locale} alternates={alternates} canonical={hrefFor(alternates, locale)}>
+  <div class="wrap page-head">
+    <h1>{t(locale, 'calc.title')}</h1>
+    <p class="lead">{S.sub}</p>
+  </div>
+  <div class="wrap calc" data-strings={JSON.stringify(S)} data-numlocale={numLocale}>
+    <section class="card">
+      <h2><span class="n">1</span>{S.s1}</h2>
+      <div class="block"><span class="lbl">{S.units}</span>
+        <div class="seg" id="units"><button type="button" data-u="cm" aria-pressed="true">CM</button><button type="button" data-u="in" aria-pressed="false">{S.inches}</button></div></div>
+      <div class="block"><span class="lbl">{S.aspect}</span>
+        <div class="seg" id="ratios"><button type="button" data-r="16:9" aria-pressed="true">16:9</button><button type="button" data-r="16:10" aria-pressed="false">16:10</button><button type="button" data-r="4:3" aria-pressed="false">4:3</button></div></div>
+      <span class="lbl">{S.tr}</span>
+      <div class="grid2">
+        <input id="trMin" type="number" inputmode="decimal" step="0.01" min="0.1" value="1.5" aria-label={S.trMin} />
+        <input id="trMax" type="number" inputmode="decimal" step="0.01" min="0.1" placeholder={S.trMax} aria-label={S.trMax} />
+      </div>
+      <p class="hint">{S.trHint}</p>
+      <details class="helper">
+        <summary>{S.helper}</summary>
+        <p class="hint">{S.helperHint}</p>
+        <div class="grid2">
+          <div><label class="lbl" for="m-dist">{S.mDist}</label><input id="m-dist" type="number" inputmode="decimal" step="any" min="0" /></div>
+          <div><label class="lbl" for="m-width">{S.mWidth}</label><input id="m-width" type="number" inputmode="decimal" step="any" min="0" /></div>
+        </div>
+        <p class="hint" id="m-out"></p>
+        <button class="btn btn--ghost" id="m-use" type="button" hidden>{S.use}</button>
+      </details>
+    </section>
+    <section class="card">
+      <h2><span class="n">2</span>{S.s2}</h2>
+      <p class="hint">{S.s2Hint}</p>
+      <div class="grid4">
+        {(['width', 'height', 'diag', 'dist'] as const).map((k, i) => (
+          <div class="field"><label class="lbl" for={`f-${k}`}><span class="abbr">{['W', 'H', 'D', 'PD'][i]}</span>{S[k]}</label>
+            <input id={`f-${k}`} data-k={k} type="number" inputmode="decimal" step="any" min="0" /><div class="alert" id={`a-${k}`}></div></div>
+        ))}
+      </div>
+      <div class="alert" id="a-tr"></div>
+      <div class="row"><button class="btn" id="calc" type="button">{S.calc}</button><button class="btn btn--ghost" id="reset" type="button">{S.reset}</button></div>
+    </section>
+    <section class="card" id="results" hidden aria-live="polite">
+      <h2>{S.results}</h2>
+      <table><tbody id="rtable"></tbody></table>
+      <svg id="diagram" viewBox="0 0 640 240" role="img" aria-label={S.diagram}></svg>
+      <p class="hint">{S.note}</p>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import { project, type Aspect, type Known } from '../lib/projection';
+  const root = document.querySelector<HTMLElement>('.calc')!;
+  const S = JSON.parse(root.dataset.strings!);
+  const NL = root.dataset.numlocale!;
+  const $ = (id: string) => document.getElementById(id) as HTMLInputElement;
+  const CM_PER_IN = 2.54;
+  const state: { units: 'cm' | 'in'; ratio: Aspect; input: Known | null } = { units: 'cm', ratio: '16:9', input: null };
+  const fields = () => document.querySelectorAll<HTMLInputElement>('.field input');
+  const clearAlerts = () => document.querySelectorAll('.alert').forEach((a) => (a.textContent = ''));
+  const nf = (x: number, d: number) => x.toLocaleString(NL, { minimumFractionDigits: d, maximumFractionDigits: d });
+  const setPressed = (g: HTMLElement, attr: string, v: string) => g.querySelectorAll<HTMLButtonElement>('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset[attr] === v)));
+
+  $('ratios').addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest('button'); if (!b) return;
+    state.ratio = b.dataset.r as Aspect; setPressed($('ratios'), 'r', state.ratio); if (state.input) calculate();
+  });
+  $('units').addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest('button'); if (!b || b.dataset.u === state.units) return;
+    const f = b.dataset.u === 'in' ? 1 / CM_PER_IN : CM_PER_IN;
+    fields().forEach((i) => { if (i.value !== '') i.value = String(+(parseFloat(i.value) * f).toFixed(2)); });
+    state.units = b.dataset.u as 'cm' | 'in'; setPressed($('units'), 'u', state.units); if (state.input) calculate();
+  });
+  ['trMin', 'trMax'].forEach((id) => $(id).addEventListener('input', () => { if (state.input) calculate(); }));
+
+  let measured: number | null = null;
+  const updateMeasured = () => {
+    const d = parseFloat($('m-dist').value), w = parseFloat($('m-width').value);
+    measured = d > 0 && w > 0 ? d / w : null;
+    $('m-out').innerHTML = measured ? `${S.measured}: <b>${nf(measured, 2)}</b> (${nf(d, 2)} ÷ ${nf(w, 2)})` : '';
+    $('m-use').hidden = !measured;
+  };
+  ['m-dist', 'm-width'].forEach((id) => $(id).addEventListener('input', updateMeasured));
+  $('m-use').addEventListener('click', () => { $('trMin').value = String(+measured!.toFixed(2)); $('trMax').value = ''; if (state.input) calculate(); $('trMin').focus(); });
+
+  fields().forEach((inp) => {
+    inp.addEventListener('input', () => {
+      fields().forEach((o) => { if (o !== inp) o.value = ''; o.classList.toggle('active', o === inp && inp.value !== ''); });
+      clearAlerts(); state.input = inp.value !== '' ? (inp.dataset.k as Known) : null;
+    });
+    inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') calculate(); });
+  });
+  $('calc').addEventListener('click', calculate);
+  $('reset').addEventListener('click', () => {
+    fields().forEach((o) => { o.value = ''; o.classList.remove('active'); });
+    clearAlerts(); state.input = null; $('trMin').value = '1.5'; $('trMax').value = '';
+    state.ratio = '16:9'; setPressed($('ratios'), 'r', '16:9'); $('results').hidden = true;
+  });
+
+  function ftIn(cm: number) { const ti = cm / CM_PER_IN; let ft = Math.floor(ti / 12), inch = Math.round(ti - ft * 12); if (inch === 12) { ft++; inch = 0; } return `${ft}' ${inch}"`; }
+  const one = (cm: number, isDiag = false) => isDiag ? `${nf(cm / CM_PER_IN, 0)}″ (${nf(cm, 0)} cm)` : state.units === 'cm' ? `${nf(cm, 1)} cm / ${ftIn(cm)}` : `${nf(cm / CM_PER_IN, 1)}″ / ${ftIn(cm)}`;
+  const val = ([a, b]: number[], isDiag = false) => Math.abs(a - b) < 0.05 ? one(a, isDiag) : `${one(a, isDiag)} ~ ${one(b, isDiag)}`;
+
+  function calculate() {
+    clearAlerts();
+    const k = state.input;
+    const tr1 = parseFloat($('trMin').value), tr2 = parseFloat($('trMax').value);
+    if (!(tr1 > 0)) { $('a-tr').textContent = S.errTr; return; }
+    if (!k) { $('a-width').textContent = S.errNone; return; }
+    let v = parseFloat($(`f-${k}`).value);
+    if (!(v > 0)) { $(`a-${k}`).textContent = S.errVal; return; }
+    if (state.units === 'in') v *= CM_PER_IN;
+    const r = project({ known: k, value: v, ratio: state.ratio, trMin: tr1, trMax: tr2 > 0 ? tr2 : undefined });
+    const rows: [string, string, boolean?][] = [
+      [S.rPD, val(r.D), k !== 'dist'], [S.rW, val(r.W), k === 'dist'], [S.rH, val(r.H), k === 'dist'], [S.rD, val(r.DG, true), k === 'dist'],
+      [S.rAspect, state.ratio], [S.rTr, r.trLo === r.trHi ? nf(r.trLo, 2) : `${nf(r.trLo, 2)} ~ ${nf(r.trHi, 2)}`],
+    ];
+    document.getElementById('rtable')!.innerHTML = rows.map(([a, b, main]) => `<tr class="${main ? 'main' : ''}"><td>${a}</td><td>${b}</td></tr>`).join('');
+    $('results').hidden = false;
+    draw(r);
+    $('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function draw(res: ReturnType<typeof project>) {
+    const dist = res.D[0], h = res.H[1], px = 90, sx = 540, cy = 110;
+    const sh = Math.max(40, Math.min(180, (180 * h) / Math.max(h, dist * 0.4)));
+    const top = cy - sh / 2, bot = cy + sh / 2;
+    const lab = (cm: number) => state.units === 'cm' ? nf(cm, 0) + ' cm' : nf(cm / CM_PER_IN, 0) + '″';
+    const rng = ([a, b]: number[]) => Math.abs(a - b) < 0.05 ? lab(a) : `${lab(a)} ~ ${lab(b)}`;
+    document.getElementById('diagram')!.innerHTML = `
+      <polygon points="${px},${cy} ${sx},${top} ${sx},${bot}" fill="#fde3dc"/>
+      <line x1="${px}" y1="${cy}" x2="${sx}" y2="${top}" stroke="#f26241" stroke-dasharray="4 4"/>
+      <line x1="${px}" y1="${cy}" x2="${sx}" y2="${bot}" stroke="#f26241" stroke-dasharray="4 4"/>
+      <rect x="${px - 56}" y="${cy - 17}" width="56" height="34" rx="6" fill="#313151"/>
+      <circle cx="${px - 4}" cy="${cy}" r="9" fill="#f26241"/>
+      <line x1="${sx}" y1="${top}" x2="${sx}" y2="${bot}" stroke="#313151" stroke-width="6"/>
+      <text x="${sx + 12}" y="${cy + 5}" fill="#313151" font-size="14">H ${rng(res.H)}</text>
+      <line x1="${px}" y1="225" x2="${sx}" y2="225" stroke="#5d5d75"/>
+      <line x1="${px}" y1="218" x2="${px}" y2="232" stroke="#5d5d75"/>
+      <line x1="${sx}" y1="218" x2="${sx}" y2="232" stroke="#5d5d75"/>
+      <text x="${(px + sx) / 2}" y="215" fill="#313151" font-size="15" font-weight="700" text-anchor="middle">PD ${rng(res.D)}</text>`;
+  }
+</script>
+
+<style>
+  .calc { max-width: 820px; padding-bottom: var(--section); display: grid; gap: 1rem; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 1.25rem; }
+  .card h2 { font-size: 1.1rem; margin-bottom: .9rem; display: flex; align-items: center; gap: .5rem; }
+  .n { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--orange); color: #fff; font-size: .85rem; }
+  input { width: 100%; padding: .65rem .75rem; font: inherit; color: var(--ink); background: var(--surface-2); border: 1px solid #cfcfdc; border-radius: 6px; min-height: 44px; }
+  .block { margin-bottom: .9rem; }
+  .lbl { font-weight: 500; font-size: var(--fs-sm); margin-bottom: .35rem; display: block; }
+  .seg { display: flex; gap: .4rem; flex-wrap: wrap; }
+  .seg button { flex: 1 1 70px; min-height: 44px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-2); color: var(--ink); font: inherit; cursor: pointer; }
+  .seg button[aria-pressed='true'] { border-color: var(--orange); background: #fde3dc; color: var(--orange-ink); font-weight: 700; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+  .grid4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: .75rem; margin-top: .75rem; }
+  .abbr { display: inline-block; min-width: 30px; padding: 1px 6px; margin-right: 4px; border-radius: 4px; background: var(--navy); color: #fff; font-size: .75rem; text-align: center; }
+  .field input.active { border-color: var(--orange); background: #fde3dc; }
+  .alert { color: #c0262d; font-size: .82rem; min-height: 1.1em; margin-top: 3px; }
+  .hint { color: var(--muted); font-size: .88rem; margin-top: .4rem; }
+  .row { margin-top: .5rem; }
+  .helper { margin-top: 1rem; border-top: 1px solid var(--line); padding-top: .75rem; }
+  .helper summary { cursor: pointer; color: var(--orange-ink); font-weight: 500; }
+  table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  :global(#rtable td) { padding: .6rem .4rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  :global(#rtable td:first-child) { color: var(--muted); width: 45%; }
+  :global(#rtable td:last-child) { font-weight: 700; }
+  :global(#rtable tr.main td:last-child) { color: var(--orange-ink); font-size: 1.15rem; }
+  #diagram { width: 100%; margin-top: 1rem; }
+  [hidden] { display: none !important; }
+</style>
