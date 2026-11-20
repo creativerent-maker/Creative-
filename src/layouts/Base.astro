@@ -5,6 +5,8 @@ import Footer from '../components/Footer.astro';
 import type { Locale } from '../i18n/routes';
 import { t } from '../i18n/ui';
 import { getServicios } from '../lib/content';
+import JsonLd from '../components/JsonLd.astro';
+import { contact } from '../lib/contact';
 
 export interface Alternate { locale: Locale | 'x-default'; href: string }
 interface Props {
@@ -22,6 +24,19 @@ const { title, description, locale, alternates, canonical, ogImage = '/brand/og-
 const links = { ...Object.fromEntries(alternates.filter((a) => a.locale !== 'x-default').map((a) => [a.locale, a.href])), ...langLinks } as Partial<Record<Locale, string>>;
 const footerServicios = (await getServicios(locale)).map((s) => ({ href: s.href, titulo: s.t.titulo }));
 const site = Astro.site!;
+const business = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': new URL('/#empresa', site).href,
+  name: 'Creative Rent',
+  description: t(locale, 'meta.home'),
+  url: site.href,
+  logo: new URL('/brand/logo-h.svg', site).href,
+  telephone: contact.telIntl,
+  email: contact.email,
+  address: { '@type': 'PostalAddress', streetAddress: contact.direccion, postalCode: contact.cp, addressLocality: contact.localidad, addressRegion: contact.provincia, addressCountry: 'ES' },
+  areaServed: 'Catalunya',
+};
 const abs = (p: string) => new URL(p, site).href;
 const fullTitle = title === t(locale, 'site.name') ? `${title} · ${t(locale, 'site.tagline').replace(/\.$/, '')}` : `${title} · Creative Rent`;
 const ogLocale = { es: 'es_ES', ca: 'ca_ES', en: 'en_GB' }[locale];
@@ -46,6 +61,7 @@ const ogLocale = { es: 'es_ES', ca: 'ca_ES', en: 'en_GB' }[locale];
     <meta property="og:url" content={abs(canonical)} />
     <meta property="og:image" content={abs(ogImage)} />
     <meta name="twitter:card" content="summary_large_image" />
+    <JsonLd data={business} />
     <slot name="head" />
   </head>
   <body>

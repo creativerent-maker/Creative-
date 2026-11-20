@@ -1,0 +1,19 @@
+{
+  "fecha": "2025-11-14",
+  "lugar": "Concesionario",
+  "tipoCliente": "empresas",
+  "servicios": [
+    "pantallas-led",
+    "alquiler-material-audiovisual"
+  ],
+  "portada": "../../assets/ejemplo/presentacion.jpg",
+  "portadaAlt": "Presentación de producto con pantalla",
+  "galeria": [],
+  "destacado": false,
+  "publicado": true,
+  "ejemplo": true,
+  "es": {
+    "titulo": "Presentación de nuevo modelo",
+    "texto": "Pantalla de gran formato, sonido e iluminación para la presentación de un nuevo modelo de coche ante clientes y prensa."
+  }
+}
