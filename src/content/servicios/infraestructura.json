@@ -1,0 +1,42 @@
+{
+  "orden": 4,
+  "es": {
+    "slug": "infraestructura",
+    "titulo": "Infraestructura",
+    "frase": "Escenarios, estructuras, tarimas y energía.",
+    "texto": "Montamos la infraestructura que necesita un acto: escenarios y tarimas, estructuras de truss para colgar luces y pantallas, y la distribución eléctrica para que todo funcione con seguridad.\n\nTrabajamos con documentación técnica y respetando la normativa, algo especialmente importante en actos públicos y en la vía pública.",
+    "incluye": [
+      "Escenarios y tarimas",
+      "Estructuras de truss y torres",
+      "Distribución eléctrica y grupos electrógenos",
+      "Cubiertas para escenario",
+      "Documentación técnica para el permiso del acto"
+    ]
+  },
+  "ca": {
+    "slug": "infraestructura",
+    "titulo": "Infraestructura",
+    "frase": "Escenaris, estructures, tarimes i energia.",
+    "texto": "Muntem la infraestructura que necessita un acte: escenaris i tarimes, estructures de truss per penjar llums i pantalles, i la distribució elèctrica perquè tot funcioni amb seguretat.\n\nTreballem amb documentació tècnica i respectant la normativa, cosa especialment important en actes públics i a la via pública.",
+    "incluye": [
+      "Escenaris i tarimes",
+      "Estructures de truss i torres",
+      "Distribució elèctrica i grups electrògens",
+      "Cobertes per a escenari",
+      "Documentació tècnica per al permís de l’acte"
+    ]
+  },
+  "en": {
+    "slug": "staging-infrastructure",
+    "titulo": "Staging and infrastructure",
+    "frase": "Stages, structures, risers and power.",
+    "texto": "We build the infrastructure an event needs: stages and risers, truss structures to hang lights and screens, and power distribution so everything runs safely.\n\nWe work with technical documentation and in line with regulations, which matters especially for public events and street events.",
+    "incluye": [
+      "Stages and risers",
+      "Truss structures and towers",
+      "Power distribution and generators",
+      "Stage roofs",
+      "Technical documentation for event permits"
+    ]
+  }
+}

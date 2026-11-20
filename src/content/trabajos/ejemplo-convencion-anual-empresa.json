@@ -1,0 +1,28 @@
+{
+  "fecha": "2026-04-23",
+  "lugar": "Hotel de congresos",
+  "tipoCliente": "empresas",
+  "servicios": [
+    "produccion-completa",
+    "pantallas-led",
+    "postproduccion"
+  ],
+  "portada": "../../assets/ejemplo/convencion.jpg",
+  "portadaAlt": "Convención anual de empresa",
+  "galeria": [],
+  "destacado": false,
+  "publicado": true,
+  "ejemplo": true,
+  "es": {
+    "titulo": "Convención anual de empresa",
+    "texto": "Producción técnica completa de la convención anual de una empresa del sector químico: escenario, pantalla LED, realización y vídeo resumen."
+  },
+  "ca": {
+    "titulo": "Convenció anual d’empresa",
+    "texto": "Producció tècnica completa de la convenció anual d’una empresa del sector químic: escenari, pantalla LED, realització i vídeo resum."
+  },
+  "en": {
+    "titulo": "Annual company convention",
+    "texto": "Full technical production of the annual convention of a chemical company: stage, LED screen, vision mixing and highlights video."
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "orden": 6,
+  "es": {
+    "slug": "mapping",
+    "titulo": "Mapping",
+    "frase": "Proyección sobre fachadas, blending y warping.",
+    "texto": "Proyectamos contenidos adaptados a la forma de una fachada, un monumento o un escenario, de modo que la imagen encaja con la arquitectura. Es un recurso muy eficaz en fiestas mayores, aniversarios e inauguraciones.\n\nHacemos el estudio del edificio, la creación del contenido, la proyección y el sonido.",
+    "incluye": [
+      "Estudio y escaneado de la superficie",
+      "Creación de contenidos a medida",
+      "Proyección con blending y warping",
+      "Sonido sincronizado",
+      "Pruebas previas en el lugar"
+    ]
+  },
+  "ca": {
+    "slug": "mapping",
+    "titulo": "Mapping",
+    "frase": "Projecció sobre façanes, blending i warping.",
+    "texto": "Projectem continguts adaptats a la forma d’una façana, un monument o un escenari, de manera que la imatge encaixa amb l’arquitectura. És un recurs molt eficaç en festes majors, aniversaris i inauguracions.\n\nFem l’estudi de l’edifici, la creació del contingut, la projecció i el so.",
+    "incluye": [
+      "Estudi i escanejat de la superfície",
+      "Creació de continguts a mida",
+      "Projecció amb blending i warping",
+      "So sincronitzat",
+      "Proves prèvies al lloc"
+    ]
+  },
+  "en": {
+    "slug": "projection-mapping",
+    "titulo": "Projection mapping",
+    "frase": "Facade projection, blending and warping.",
+    "texto": "We project content shaped to a facade, a monument or a stage, so the image fits the architecture. It is a powerful feature for town festivals, anniversaries and openings.\n\nWe survey the building, create the content, and handle projection and sound.",
+    "incluye": [
+      "Surface survey and scan",
+      "Custom content creation",
+      "Projection with blending and warping",
+      "Synchronised sound",
+      "On-site tests beforehand"
+    ]
+  }
+}

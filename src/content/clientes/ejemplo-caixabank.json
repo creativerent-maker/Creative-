@@ -1,0 +1,6 @@
+{
+  "nombre": "CaixaBank",
+  "logo": "../../assets/clientes/ejemplo-caixabank.svg",
+  "orden": 4,
+  "ejemplo": true
+}

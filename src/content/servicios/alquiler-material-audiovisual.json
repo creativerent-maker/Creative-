@@ -1,0 +1,42 @@
+{
+  "orden": 1,
+  "es": {
+    "slug": "alquiler-material-audiovisual",
+    "titulo": "Alquiler de material audiovisual",
+    "frase": "Sonido, iluminación, vídeo y proyección.",
+    "texto": "Disponemos de un stock propio de equipos profesionales de sonido, iluminación, vídeo y proyección, revisados antes y después de cada servicio. Puedes alquilarlos con montaje y técnico, o solo el material si tu equipo ya sabe manejarlo.\n\nTe ayudamos a elegir la configuración adecuada para el espacio, el aforo y el tipo de acto, para que no falte ni sobre nada.",
+    "incluye": [
+      "Sistemas de sonido y microfonía",
+      "Iluminación escénica y arquitectural",
+      "Proyectores y pantallas de proyección",
+      "Mesas de mezcla y control de vídeo",
+      "Transporte, montaje y desmontaje"
+    ]
+  },
+  "ca": {
+    "slug": "lloguer-material-audiovisual",
+    "titulo": "Lloguer de material audiovisual",
+    "frase": "So, il·luminació, vídeo i projecció.",
+    "texto": "Disposem d’un estoc propi d’equips professionals de so, il·luminació, vídeo i projecció, revisats abans i després de cada servei. Els pots llogar amb muntatge i tècnic, o només el material si el teu equip ja el sap fer servir.\n\nT’ajudem a triar la configuració adequada per a l’espai, l’aforament i el tipus d’acte, perquè no falti ni sobri res.",
+    "incluye": [
+      "Sistemes de so i microfonia",
+      "Il·luminació escènica i arquitectònica",
+      "Projectors i pantalles de projecció",
+      "Taules de mescles i control de vídeo",
+      "Transport, muntatge i desmuntatge"
+    ]
+  },
+  "en": {
+    "slug": "audiovisual-equipment-rental",
+    "titulo": "Audiovisual equipment rental",
+    "frase": "Sound, lighting, video and projection.",
+    "texto": "We own a stock of professional sound, lighting, video and projection equipment, checked before and after every job. You can rent it with set-up and a technician, or just the equipment if your team already knows how to run it.\n\nWe help you choose the right set-up for the venue, the audience size and the type of event, so nothing is missing and nothing is wasted.",
+    "incluye": [
+      "Sound systems and microphones",
+      "Stage and architectural lighting",
+      "Projectors and projection screens",
+      "Mixing desks and video control",
+      "Delivery, set-up and dismantling"
+    ]
+  }
+}

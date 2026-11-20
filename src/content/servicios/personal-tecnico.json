@@ -1,0 +1,42 @@
+{
+  "orden": 8,
+  "es": {
+    "slug": "personal-tecnico",
+    "titulo": "Personal técnico",
+    "frase": "Técnicos de sonido, luces, vídeo y realización.",
+    "texto": "Ponemos a tu disposición técnicos cualificados de sonido, iluminación, vídeo y realización, en formación constante para trabajar con las últimas tecnologías. Pueden operar nuestro material o reforzar el equipo técnico de tu espacio.",
+    "incluye": [
+      "Técnicos de sonido",
+      "Técnicos de iluminación",
+      "Técnicos de vídeo y pantallas",
+      "Realizadores",
+      "Jefes técnicos y montadores"
+    ]
+  },
+  "ca": {
+    "slug": "personal-tecnic",
+    "titulo": "Personal tècnic",
+    "frase": "Tècnics de so, llums, vídeo i realització.",
+    "texto": "Posem a la teva disposició tècnics qualificats de so, il·luminació, vídeo i realització, en formació constant per treballar amb les últimes tecnologies. Poden operar el nostre material o reforçar l’equip tècnic del teu espai.",
+    "incluye": [
+      "Tècnics de so",
+      "Tècnics d’il·luminació",
+      "Tècnics de vídeo i pantalles",
+      "Realitzadors",
+      "Caps tècnics i muntadors"
+    ]
+  },
+  "en": {
+    "slug": "technical-crew",
+    "titulo": "Technical crew",
+    "frase": "Sound, lighting, video and vision technicians.",
+    "texto": "We provide qualified sound, lighting, video and vision-mixing technicians who keep up to date with the latest technology. They can run our equipment or reinforce your venue’s own technical team.",
+    "incluye": [
+      "Sound technicians",
+      "Lighting technicians",
+      "Video and screen technicians",
+      "Vision mixers and directors",
+      "Technical managers and riggers"
+    ]
+  }
+}

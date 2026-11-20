@@ -1,0 +1,42 @@
+{
+  "orden": 7,
+  "es": {
+    "slug": "postproduccion",
+    "titulo": "Postproducción y contenidos",
+    "frase": "Filmación, edición y vídeos para el evento.",
+    "texto": "Filmamos el acto y editamos un vídeo resumen, piezas para redes sociales o la grabación completa. También creamos los contenidos que se proyectan durante el evento: cortinillas, vídeos de presentación y fondos para pantallas.",
+    "incluye": [
+      "Filmación del acto",
+      "Vídeo resumen y piezas para redes",
+      "Edición de la grabación completa",
+      "Contenidos para pantallas y mapping",
+      "Grafismo y rótulos"
+    ]
+  },
+  "ca": {
+    "slug": "postproduccio",
+    "titulo": "Postproducció i continguts",
+    "frase": "Filmació, edició i vídeos per a l’esdeveniment.",
+    "texto": "Filmem l’acte i editem un vídeo resum, peces per a xarxes socials o l’enregistrament complet. També creem els continguts que es projecten durant l’esdeveniment: cortinetes, vídeos de presentació i fons per a pantalles.",
+    "incluye": [
+      "Filmació de l’acte",
+      "Vídeo resum i peces per a xarxes",
+      "Edició de l’enregistrament complet",
+      "Continguts per a pantalles i mapping",
+      "Grafisme i rètols"
+    ]
+  },
+  "en": {
+    "slug": "post-production",
+    "titulo": "Post-production and content",
+    "frase": "Filming, editing and videos for your event.",
+    "texto": "We film the event and edit a highlights video, social media clips or the full recording. We also create the content shown during the event: stings, opening videos and screen backgrounds.",
+    "incluye": [
+      "Event filming",
+      "Highlights video and social clips",
+      "Full recording edit",
+      "Content for screens and mapping",
+      "Graphics and captions"
+    ]
+  }
+}

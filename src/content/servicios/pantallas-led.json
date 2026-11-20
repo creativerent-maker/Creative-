@@ -1,0 +1,42 @@
+{
+  "orden": 2,
+  "es": {
+    "slug": "pantallas-led",
+    "titulo": "Pantallas LED",
+    "frase": "Interior y exterior, a medida del espacio.",
+    "texto": "Pantallas LED modulares para interior y exterior, que se montan a la medida del escenario o del espacio. Son la mejor opción cuando hay mucha luz ambiente, públicos grandes o actos al aire libre.\n\nNos ocupamos de la estructura, la señal y los contenidos, y dejamos un técnico durante el acto.",
+    "incluye": [
+      "Pantallas LED modulares de interior y exterior",
+      "Estructuras de soporte y volado",
+      "Procesado y control de señal",
+      "Reproducción de contenidos y cámaras en directo",
+      "Técnico durante el acto"
+    ]
+  },
+  "ca": {
+    "slug": "pantalles-led",
+    "titulo": "Pantalles LED",
+    "frase": "Interior i exterior, a mida de l’espai.",
+    "texto": "Pantalles LED modulars per a interior i exterior, que es munten a la mida de l’escenari o de l’espai. Són la millor opció quan hi ha molta llum ambiental, públics grans o actes a l’aire lliure.\n\nNosaltres ens encarreguem de l’estructura, el senyal i els continguts, i deixem un tècnic durant l’acte.",
+    "incluye": [
+      "Pantalles LED modulars d’interior i exterior",
+      "Estructures de suport i penjades",
+      "Processament i control de senyal",
+      "Reproducció de continguts i càmeres en directe",
+      "Tècnic durant l’acte"
+    ]
+  },
+  "en": {
+    "slug": "led-screens",
+    "titulo": "LED screens",
+    "frase": "Indoor and outdoor, built to fit the space.",
+    "texto": "Modular LED screens for indoor and outdoor use, built to fit the stage or the space. They are the best choice with strong ambient light, large audiences or open-air events.\n\nWe take care of the structure, the signal and the content, and leave a technician on site during the event.",
+    "incluye": [
+      "Modular indoor and outdoor LED screens",
+      "Ground-stacked and flown structures",
+      "Signal processing and control",
+      "Content playback and live cameras",
+      "On-site technician during the event"
+    ]
+  }
+}

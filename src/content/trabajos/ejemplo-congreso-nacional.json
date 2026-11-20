@@ -1,0 +1,28 @@
+{
+  "fecha": "2026-03-05",
+  "lugar": "Palacio de congresos",
+  "tipoCliente": "congresos",
+  "servicios": [
+    "alquiler-material-audiovisual",
+    "personal-tecnico",
+    "streaming"
+  ],
+  "portada": "../../assets/ejemplo/congreso.jpg",
+  "portadaAlt": "Congreso nacional",
+  "galeria": [],
+  "destacado": false,
+  "publicado": true,
+  "ejemplo": true,
+  "es": {
+    "titulo": "Congreso nacional",
+    "texto": "Sala plenaria y salas paralelas durante tres días, con proyección, microfonía, grabación de ponencias y personal técnico en cada sala."
+  },
+  "ca": {
+    "titulo": "Congrés nacional",
+    "texto": "Sala plenària i sales paral·leles durant tres dies, amb projecció, microfonia, enregistrament de ponències i personal tècnic a cada sala."
+  },
+  "en": {
+    "titulo": "National conference",
+    "texto": "Plenary room and breakout rooms over three days, with projection, microphones, session recording and a technician in every room."
+  }
+}

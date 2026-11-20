@@ -1,0 +1,42 @@
+{
+  "orden": 3,
+  "es": {
+    "slug": "streaming",
+    "titulo": "Streaming y eventos híbridos",
+    "frase": "Retransmisión, grabación multicámara y conexiones remotas.",
+    "texto": "Retransmitimos tu acto en directo a YouTube, a tu web o a la plataforma que uses, con realización multicámara y sonido profesional. También conectamos ponentes a distancia para que intervengan en la sala como si estuvieran allí.\n\nAl terminar te entregamos la grabación lista para publicar.",
+    "incluye": [
+      "Realización multicámara",
+      "Retransmisión en directo a cualquier plataforma",
+      "Conexión de ponentes remotos",
+      "Rótulos y grafismo en pantalla",
+      "Grabación del acto"
+    ]
+  },
+  "ca": {
+    "slug": "streaming",
+    "titulo": "Streaming i esdeveniments híbrids",
+    "frase": "Retransmissió, enregistrament multicàmera i connexions remotes.",
+    "texto": "Retransmetem el teu acte en directe a YouTube, al teu web o a la plataforma que facis servir, amb realització multicàmera i so professional. També connectem ponents a distància perquè intervinguin a la sala com si hi fossin.\n\nEn acabar t’entreguem l’enregistrament a punt per publicar.",
+    "incluye": [
+      "Realització multicàmera",
+      "Retransmissió en directe a qualsevol plataforma",
+      "Connexió de ponents remots",
+      "Rètols i grafisme en pantalla",
+      "Enregistrament de l’acte"
+    ]
+  },
+  "en": {
+    "slug": "streaming",
+    "titulo": "Streaming and hybrid events",
+    "frase": "Live streaming, multi-camera recording and remote connections.",
+    "texto": "We stream your event live to YouTube, your website or the platform you use, with multi-camera production and professional sound. We can also bring in remote speakers so they take part in the room as if they were there.\n\nAfterwards you get the recording, ready to publish.",
+    "incluye": [
+      "Multi-camera production",
+      "Live streaming to any platform",
+      "Remote speaker connections",
+      "On-screen captions and graphics",
+      "Event recording"
+    ]
+  }
+}

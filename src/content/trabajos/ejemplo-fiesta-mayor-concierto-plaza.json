@@ -1,0 +1,28 @@
+{
+  "fecha": "2026-09-12",
+  "lugar": "Plaza Mayor",
+  "tipoCliente": "ayuntamientos",
+  "servicios": [
+    "infraestructura",
+    "alquiler-material-audiovisual",
+    "pantallas-led"
+  ],
+  "portada": "../../assets/ejemplo/fiesta-mayor.jpg",
+  "portadaAlt": "Fiesta mayor · Concierto en la plaza",
+  "galeria": [],
+  "destacado": false,
+  "publicado": true,
+  "ejemplo": true,
+  "es": {
+    "titulo": "Fiesta mayor · Concierto en la plaza",
+    "texto": "Escenario, sonido, iluminación y pantalla LED para el concierto principal de la fiesta mayor, con montaje en la vía pública y técnico durante toda la noche."
+  },
+  "ca": {
+    "titulo": "Festa major · Concert a la plaça",
+    "texto": "Escenari, so, il·luminació i pantalla LED per al concert principal de la festa major, amb muntatge a la via pública i tècnic durant tota la nit."
+  },
+  "en": {
+    "titulo": "Town festival · Concert in the main square",
+    "texto": "Stage, sound, lighting and LED screen for the festival’s main concert, set up on the street with a technician throughout the night."
+  }
+}

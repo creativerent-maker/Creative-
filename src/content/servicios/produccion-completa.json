@@ -1,0 +1,42 @@
+{
+  "orden": 5,
+  "es": {
+    "slug": "produccion-completa",
+    "titulo": "Producción completa",
+    "frase": "Un único responsable técnico de principio a fin.",
+    "texto": "Nos encargamos de toda la parte técnica del acto con un único interlocutor: visitamos el espacio, preparamos el plan técnico, montamos, operamos durante el acto y desmontamos.\n\nTú te centras en el contenido y en tus invitados; nosotros, en que todo suene, se vea y funcione.",
+    "incluye": [
+      "Visita técnica y plan del acto",
+      "Coordinación de sonido, luz, vídeo e infraestructura",
+      "Escaleta técnica y ensayos",
+      "Operación durante el acto",
+      "Montaje y desmontaje"
+    ]
+  },
+  "ca": {
+    "slug": "produccio-completa",
+    "titulo": "Producció completa",
+    "frase": "Un únic responsable tècnic de principi a fi.",
+    "texto": "Ens encarreguem de tota la part tècnica de l’acte amb un únic interlocutor: visitem l’espai, preparem el pla tècnic, muntem, operem durant l’acte i desmuntem.\n\nTu et centres en el contingut i en els teus convidats; nosaltres, en què tot soni, es vegi i funcioni.",
+    "incluye": [
+      "Visita tècnica i pla de l’acte",
+      "Coordinació de so, llum, vídeo i infraestructura",
+      "Escaleta tècnica i assajos",
+      "Operació durant l’acte",
+      "Muntatge i desmuntatge"
+    ]
+  },
+  "en": {
+    "slug": "full-event-production",
+    "titulo": "Full event production",
+    "frase": "One technical lead from start to finish.",
+    "texto": "We handle every technical aspect of the event through a single point of contact: we visit the venue, prepare the technical plan, set up, run the show and dismantle.\n\nYou focus on the content and your guests; we make sure everything sounds right, looks right and works.",
+    "incluye": [
+      "Site visit and technical plan",
+      "Coordination of sound, light, video and staging",
+      "Technical running order and rehearsals",
+      "Show operation",
+      "Set-up and dismantling"
+    ]
+  }
+}

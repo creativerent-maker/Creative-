@@ -1,0 +1,6 @@
+{
+  "nombre": "PortAventura",
+  "logo": "../../assets/clientes/ejemplo-portaventura.svg",
+  "orden": 1,
+  "ejemplo": true
+}

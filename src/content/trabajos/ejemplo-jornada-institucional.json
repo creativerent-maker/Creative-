@@ -1,0 +1,27 @@
+{
+  "fecha": "2026-06-18",
+  "lugar": "Edificio histórico",
+  "tipoCliente": "instituciones",
+  "servicios": [
+    "alquiler-material-audiovisual",
+    "streaming"
+  ],
+  "portada": "../../assets/ejemplo/jornada.jpg",
+  "portadaAlt": "Jornada institucional",
+  "galeria": [],
+  "destacado": false,
+  "publicado": true,
+  "ejemplo": true,
+  "es": {
+    "titulo": "Jornada institucional",
+    "texto": "Sonido de sala, proyección y retransmisión en directo de una jornada técnica para una administración pública."
+  },
+  "ca": {
+    "titulo": "Jornada institucional",
+    "texto": "So de sala, projecció i retransmissió en directe d’una jornada tècnica per a una administració pública."
+  },
+  "en": {
+    "titulo": "Institutional seminar",
+    "texto": "Room sound, projection and live streaming of a technical seminar for a public administration."
+  }
+}
