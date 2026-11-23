@@ -1,7 +1,7 @@
 # Avís legal
 
 ## Dades identificatives
-En compliment de la Llei 34/2002, de serveis de la societat de la informació i de comerç electrònic (LSSI-CE), s’informa que aquest lloc web és titularitat de **[RAZÓN SOCIAL]** (d’ara endavant, Creative Rent), amb CIF **[CIF]** i domicili social a **[DOMICILIO SOCIAL]**. Contacte: info@creativerent.es · 977 199 720.
+En compliment de la Llei 34/2002, de serveis de la societat de la informació i de comerç electrònic (LSSI-CE), s’informa que aquest lloc web és titularitat de **Creative Rent, S.L.U.** (d’ara endavant, Creative Rent), amb CIF **B55562714** i domicili social a C/ Campsrodons, nave 14, 43110 La Canonja (Tarragona). Contacte: info@creativerent.es · 977 199 720.
 
 ## Objecte
 Aquest lloc web informa sobre els serveis audiovisuals de Creative Rent i permet sol·licitar pressupostos. L’accés és gratuït i no requereix registre.

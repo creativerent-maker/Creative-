@@ -40,7 +40,7 @@ Orden obligatorio. **El paso 5 (dominio y email) no se empieza sin la confirmaci
 - [ ] (Opcional) Sustituir la imagen para compartir en redes `public/brand/og-default.jpg` (1200×630) por una con foto propia.
 
 ## 4. Textos legales
-- [ ] Sustituir `[RAZÓN SOCIAL]`, `[CIF]` y `[DOMICILIO SOCIAL]` en `src/content/legal/*.md`, en los 3 idiomas.
+- [x] Datos fiscales en los textos legales (Creative Rent, S.L.U. · B55562714 · C/ Campsrodons, nave 14, 43110 La Canonja), en los 3 idiomas.
 - [ ] `npm run build:prod` termina sin errores. Este comando bloquea la publicación mientras queden datos pendientes.
 
 ## 5. Dominio y email: SOLO con confirmación expresa del propietario

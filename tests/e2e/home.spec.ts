@@ -29,11 +29,11 @@ describe('home', () => {
     await page.close();
   });
 
-  it('shows the 8 service cards and the "for" band', async () => {
+  it('shows the 8 service cards and no "Trabajamos para" band', async () => {
     const page = await (await getBrowser()).newPage();
     await page.goto(PREVIEW + '/');
     expect(await page.locator('.service-card').count()).toBe(8);
-    expect(await page.getByText('Trabajamos para').count()).toBe(1);
+    expect(await page.getByText('Trabajamos para').count()).toBe(0);
     await page.close();
   });
 

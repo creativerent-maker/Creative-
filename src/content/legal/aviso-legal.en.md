@@ -1,7 +1,7 @@
 # Legal notice
 
 ## Company details
-In accordance with Spanish Law 34/2002 on information society services and electronic commerce (LSSI-CE), this website is owned by **[RAZÓN SOCIAL]** (Creative Rent), tax ID **[CIF]**, registered office at **[DOMICILIO SOCIAL]**. Contact: info@creativerent.es · +34 977 199 720.
+In accordance with Spanish Law 34/2002 on information society services and electronic commerce (LSSI-CE), this website is owned by **Creative Rent, S.L.U.** (Creative Rent), tax ID **B55562714**, registered office at C/ Campsrodons, nave 14, 43110 La Canonja (Tarragona). Contact: info@creativerent.es · +34 977 199 720.
 
 ## Purpose
 This website provides information about Creative Rent’s audiovisual services and lets visitors request quotes. Access is free and requires no registration.

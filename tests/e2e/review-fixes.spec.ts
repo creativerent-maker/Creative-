@@ -18,13 +18,11 @@ describe('review fixes', () => {
     await page.close();
   });
 
-  it('client carousel has a pause button that stops the animation', async () => {
+  it('client carousel has no pause button and still pauses on hover', async () => {
     const page = await (await getBrowser()).newPage();
     await page.goto(PREVIEW + '/');
-    const btn = page.locator('.marquee-toggle');
-    expect(await btn.getAttribute('aria-pressed')).toBe('false');
-    await btn.click();
-    expect(await btn.getAttribute('aria-pressed')).toBe('true');
+    expect(await page.locator('.marquee-toggle').count()).toBe(0);
+    await page.locator('.marquee').hover();
     const state = await page.locator('.marquee-track').evaluate((el) => getComputedStyle(el).animationPlayState);
     expect(state).toBe('paused');
     await page.close();
@@ -36,5 +34,17 @@ describe('review fixes', () => {
     expect(xml).not.toContain('/ca/treballs/ejemplo-presentacion-nuevo-modelo/');
     expect(xml).not.toContain('/en/projects/ejemplo-presentacion-nuevo-modelo/');
     expect(xml).toContain('/ca/treballs/ejemplo-congreso-nacional/');
+  });
+
+  it.each(['/aviso-legal/', '/ca/avis-legal/', '/en/legal-notice/', '/privacidad/'])('%s shows the real company data and is indexable', async (u) => {
+    const page = await (await getBrowser()).newPage();
+    await page.goto(PREVIEW + u);
+    const text = await page.locator('main').innerText();
+    expect(text).toContain('Creative Rent, S.L.U.');
+    expect(text).toContain('B55562714');
+    expect(text).toContain('C/ Campsrodons, nave 14, 43110 La Canonja (Tarragona)');
+    expect(text).not.toMatch(/\[(RAZÓN SOCIAL|CIF|DOMICILIO SOCIAL)\]/);
+    expect(await page.locator('meta[name=robots][content=noindex]').count()).toBe(0);
+    await page.close();
   });
 });

@@ -1,7 +1,7 @@
 # Privacy policy
 
 ## Data controller
-**[RAZÓN SOCIAL]**, tax ID **[CIF]**, **[DOMICILIO SOCIAL]**. Contact: info@creativerent.es.
+**Creative Rent, S.L.U.**, tax ID **B55562714**, C/ Campsrodons, nave 14, 43110 La Canonja (Tarragona). Contact: info@creativerent.es.
 
 ## What data we process and why
 When you send us a quote request we process the data you provide (name, organisation, email, phone and event details) for one purpose only: **to reply to your request and, where applicable, to prepare and manage the quote**.

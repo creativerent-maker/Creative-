@@ -1,7 +1,7 @@
 # Política de privacidad
 
 ## Responsable del tratamiento
-**[RAZÓN SOCIAL]**, CIF **[CIF]**, **[DOMICILIO SOCIAL]**. Contacto: info@creativerent.es.
+**Creative Rent, S.L.U.**, CIF **B55562714**, C/ Campsrodons, nave 14, 43110 La Canonja (Tarragona). Contacto: info@creativerent.es.
 
 ## Qué datos tratamos y para qué
 Cuando nos envías una solicitud de presupuesto tratamos los datos que nos facilitas (nombre, organización, email, teléfono y datos del acto) con una única finalidad: **responder a tu solicitud y, en su caso, preparar y gestionar el presupuesto**.
