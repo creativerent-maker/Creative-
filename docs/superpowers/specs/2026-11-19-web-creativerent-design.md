@@ -247,3 +247,16 @@ Orden de trabajo:
 4. **Datos fiscales** para los textos legales, y confirmación de la dirección (C/ Campsrodons, nave 14).
 5. **Cuenta de GitHub** de cada persona que vaya a usar el panel.
 6. **Accesos** (solo se necesitan en el paso final): ¿quién puede entrar al panel de Webempresa y al registrador de creativerent.es? ¿creativerent.net está registrado a nombre de la empresa o lo controla BeeDIGITAL?
+
+## 12. Cambio de alojamiento: Webempresa (27/11/2026)
+
+El propietario decide alojar la web en el **hosting actual de Webempresa**, en lugar de Cloudflare, empezando por una prueba en un subdominio. Esta sección prevalece sobre §5 y §9 en lo que se contradigan.
+
+- **Dominio, DNS y correo:** no se tocan. La web nueva sustituye al WordPress en el mismo hosting, como último paso y con confirmación expresa del propietario (ver `docs/LANZAMIENTO.md`).
+- **Formulario:** `public/api/presupuesto.php`, que envía con `mail()` del hosting a info@creativerent.es, con Reply-To al cliente. El antispam se hace sin servicios externos: campo trampa, tiempo mínimo y 5 envíos por IP y hora. Sin Turnstile ni Resend.
+- **Redirecciones:** se pasan a `.htaccess`, generado en el build. Incluye forzar https, quitar el www, la 404 y la caché.
+- **Publicación:** GitHub Actions (`.github/workflows/publicar.yml`) construye y sube por FTPS en cada cambio de `main`. La variable `DESTINO` (`pruebas` | `produccion`) impide sustituir la web actual hasta que el propietario lo confirme.
+- **Panel:** Sveltia CMS con acceso mediante clave personal de GitHub. No hace falta un worker OAuth.
+- **Analítica:** ninguna por ahora. La política de cookies refleja que no hay cookies.
+- **Builds de pruebas:** llevan `noindex` y un `robots.txt` que bloquea a los buscadores, para que el subdominio no compita con creativerent.es en Google.
+- **Lo que se pierde respecto a Cloudflare:** la red de distribución global. Es aceptable porque el público está en Cataluña.

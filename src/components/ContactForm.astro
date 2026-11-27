@@ -4,11 +4,10 @@ import { t } from '../i18n/ui';
 import { contact } from '../lib/contact';
 interface Props { locale: Locale }
 const { locale } = Astro.props;
-const sitekey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY || '1x00000000000000000000AA'; // clave de pruebas de Cloudflare
 const tipos = ['institucional', 'corporativo', 'congreso', 'fiesta-popular', 'otro'] as const;
 const opt = `(${t(locale, 'form.opcional')})`;
 ---
-<form id="presupuesto" class="qform" novalidate data-ok={t(locale, 'form.ok')} data-error={t(locale, 'form.error')} data-sending={t(locale, 'form.enviando')} data-required={t(locale, 'form.obligatorio')}>
+<form id="presupuesto" class="qform" novalidate data-endpoint="/api/presupuesto.php" data-ok={t(locale, 'form.ok')} data-error={t(locale, 'form.error')} data-sending={t(locale, 'form.enviando')} data-required={t(locale, 'form.obligatorio')}>
   <h2>{t(locale, 'form.title')}</h2>
   <div class="grid">
     <label><span class="lt">{t(locale, 'form.nombre')}</span><input id="q-nombre" name="nombre" autocomplete="name" required maxlength="120" /></label>
@@ -26,14 +25,14 @@ const opt = `(${t(locale, 'form.opcional')})`;
     <label class="full"><span class="lt">{t(locale, 'form.mensaje')}</span><textarea id="q-msg" name="mensaje" rows="6" required maxlength="5000"></textarea></label>
   </div>
   <label class="check"><input id="q-priv" type="checkbox" name="privacidad" required /> <span><a href={localizedPath('privacidad', locale)}>{t(locale, 'form.privacidad')}</a></span></label>
-  <div class="cf-turnstile" data-sitekey={sitekey} data-language={locale}></div>
+  <div class="hp" aria-hidden="true"><label>Web <input name="web" tabindex="-1" autocomplete="off" /></label></div>
   <button class="btn" type="submit">{t(locale, 'form.enviar')}</button>
   <p class="status" role="status" aria-live="polite"></p>
   <noscript><p>{t(locale, 'contacto.telefono')}: {contact.telefono} · {contact.email}</p></noscript>
 </form>
-<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script>
   const form = document.getElementById('presupuesto') as HTMLFormElement | null;
+  const loadedAt = Date.now();
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const status = form.querySelector<HTMLElement>('.status')!;
@@ -41,14 +40,14 @@ const opt = `(${t(locale, 'form.opcional')})`;
     form.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
     const fd = new FormData(form);
     const body = {
-      ...Object.fromEntries([...fd.entries()].filter(([k]) => k !== 'cf-turnstile-response' && k !== 'privacidad')),
+      ...Object.fromEntries([...fd.entries()].filter(([k]) => k !== 'privacidad')),
       privacidad: fd.get('privacidad') === 'on',
-      turnstileToken: fd.get('cf-turnstile-response') ?? '',
+      t: loadedAt,
     };
     btn.disabled = true;
     status.textContent = form.dataset.sending ?? '';
     try {
-      const res = await fetch('/api/presupuesto', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+      const res = await fetch(form.dataset.endpoint!, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
       const json = await res.json().catch(() => ({}));
       if (res.ok && json.ok) {
         form.reset();
@@ -64,12 +63,11 @@ const opt = `(${t(locale, 'form.opcional')})`;
       status.className = 'status err';
     } finally {
       btn.disabled = false;
-      (window as unknown as { turnstile?: { reset: () => void } }).turnstile?.reset();
     }
   });
 </script>
 <style>
-  .qform { display: grid; gap: 1.25rem; background: var(--surface-2); border-radius: var(--radius); padding: clamp(1.25rem, 1rem + 2vw, 2.25rem); scroll-margin-top: 1rem; }
+  .qform { position: relative; display: grid; gap: 1.25rem; background: var(--surface-2); border-radius: var(--radius); padding: clamp(1.25rem, 1rem + 2vw, 2.25rem); scroll-margin-top: 1rem; }
   h2 { font-size: var(--fs-lg); }
   .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1.25rem; }
   label { display: grid; gap: .35rem; font-size: var(--fs-sm); font-weight: 500; }
@@ -81,6 +79,7 @@ const opt = `(${t(locale, 'form.opcional')})`;
   .check { grid-template-columns: auto 1fr; align-items: start; gap: .6rem; font-weight: 400; }
   .check input { width: 22px; height: 22px; min-height: 0; margin-top: .1rem; }
   .btn { justify-self: start; }
+  .hp { display: none; }
   .status:empty { display: none; }
   .status { font-weight: 500; }
   .status.ok { color: #1d7a3c; }

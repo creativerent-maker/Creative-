@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { redirectRules, robotsTxt } from './src/lib/redirects';
+import { htaccess, robotsTxtFor } from './src/lib/redirects';
 
 const SITE = 'https://creativerent.es';
 
@@ -37,8 +37,9 @@ export default defineConfig({
       hooks: {
         'astro:build:done': ({ dir }) => {
           const out = fileURLToPath(dir);
-          writeFileSync(`${out}/_redirects`, redirectRules().join('\n') + '\n');
-          writeFileSync(`${out}/robots.txt`, robotsTxt(SITE));
+          const production = process.env.SITE_ENV === 'production';
+          writeFileSync(`${out}/.htaccess`, htaccess());
+          writeFileSync(`${out}/robots.txt`, robotsTxtFor(SITE, production));
         },
       },
     },

@@ -1,12 +1,13 @@
 # Web de Creative Rent (creativerent.es)
 
-Web de Creative Rent en castellano, catalán e inglés. Es una web estática: no hay base de datos ni plugins que actualizar. Cada cambio que se guarda en el panel vuelve a generar la web automáticamente en 1 o 2 minutos.
+Web de Creative Rent en castellano, catalán e inglés, alojada en **Webempresa** (el mismo hosting de siempre). Es una web estática: no hay base de datos ni plugins que actualizar. Cada cambio que se guarda en el panel vuelve a generar la web y la sube a Webempresa automáticamente en 2 o 3 minutos.
 
 ## Para el día a día (sin conocimientos técnicos)
 
 ### Entrar al panel
 1. Abre **https://creativerent.es/admin/** en el móvil o en el ordenador.
-2. Pulsa **«Sign In with GitHub»** y entra con tu cuenta de GitHub. Solo hay que hacerlo la primera vez en cada dispositivo.
+2. Pulsa **«Sign In Using Access Token»** y pega tu clave de acceso de GitHub. Solo hay que hacerlo la primera vez en cada dispositivo.
+   - La clave se crea una vez en GitHub: *Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token*, con acceso solo al repositorio `Creative-` y permiso **Contents: Read and write**. Guárdala en un lugar seguro y no la compartas.
 
 ### Añadir un trabajo desde el móvil
 1. En el panel, entra en **Trabajos** y pulsa **«Nuevo trabajo»**.
@@ -30,7 +31,7 @@ Para que un trabajo deje de verse sin borrarlo, desmarca **«¿Publicado?»**.
 El diseño, el menú, los textos fijos de las páginas y los textos legales. Para eso hace falta un desarrollador.
 
 ### Si algo falla
-- Si un cambio no aparece después de 5 minutos, puede que la generación de la web haya fallado. Normalmente la causa es un campo obligatorio vacío o una foto dañada. En Cloudflare (Workers & Pages → creativerent → Deployments) se ve el error. La web anterior sigue publicada mientras tanto, así que nunca se queda caída.
+- Si un cambio no aparece después de 5 minutos, puede que la publicación haya fallado. Normalmente la causa es un campo obligatorio vacío o una foto dañada. En GitHub, pestaña **Actions → Publicar web**, se ve el error. La web anterior sigue publicada mientras tanto, así que nunca se queda caída.
 - Contacto técnico: _(rellenar con la persona que mantenga la web)_.
 
 ---
@@ -39,9 +40,10 @@ El diseño, el menú, los textos fijos de las páginas y los textos legales. Par
 
 **Stack:**
 - Astro (sitio estático) con TypeScript.
-- Contenido en `src/content/` (JSON), editado con Sveltia CMS en `/admin`.
-- Formulario de presupuesto: Cloudflare Pages Function en `functions/api/presupuesto.ts`, con Turnstile y Resend.
-- Alojamiento en Cloudflare Pages.
+- Contenido en `src/content/` (JSON), editado con Sveltia CMS en `/admin` (acceso con clave personal de GitHub).
+- Formulario de presupuesto: `public/api/presupuesto.php` (PHP ≥ 8.1, `mail()` del hosting), con campo trampa, tiempo mínimo y límite de 5 envíos por IP y hora.
+- Alojamiento en Webempresa. `astro.config.ts` genera `.htaccess` (https, sin www, redirecciones de la web antigua, 404 y caché) y `robots.txt`.
+- Publicación: `.github/workflows/publicar.yml` construye y sube `dist/` por FTPS en cada cambio de `main`.
 
 ```bash
 npm install
@@ -69,15 +71,17 @@ npm run build:prod   # build de producción: falla si quedan datos pendientes (v
 
 **Tipografía:** los titulares usan Exo 2. Si se consigue la licencia web de Amplesoft Pro, basta con añadir sus WOFF2 y cambiar `--font-display` en `src/styles/tokens.css`.
 
-**Variables de entorno (Cloudflare Pages):**
+**Publicación (GitHub → Settings → Secrets and variables → Actions):**
 
-| Variable | Dónde | Valor |
+| Nombre | Tipo | Valor |
 |---|---|---|
-| `SITE_ENV` | Production | `production` |
-| `PUBLIC_TURNSTILE_SITEKEY` | Production y Preview | Clave pública de Turnstile |
-| `TURNSTILE_SECRET` | Secreto | Clave secreta de Turnstile |
-| `RESEND_API_KEY` | Secreto | API key de Resend |
-| `QUOTE_TO` | Production y Preview | `info@creativerent.es` |
-| `QUOTE_FROM` | Production y Preview | `web@creativerent.es` (dominio verificado en Resend) |
+| `FTP_SERVER` | Secreto | Servidor FTP de Webempresa |
+| `FTP_USERNAME` | Secreto | Usuario FTP |
+| `FTP_PASSWORD` | Secreto | Contraseña FTP |
+| `FTP_DIR_PRUEBAS` | Secreto | Carpeta del subdominio de pruebas, terminada en `/` |
+| `FTP_DIR_PRODUCCION` | Secreto | Carpeta de creativerent.es (`public_html/`), terminada en `/` |
+| `DESTINO` | Variable | `pruebas` (por defecto) o `produccion`. **Solo se cambia a `produccion` con la confirmación del propietario.** |
+
+En modo `pruebas` se publica el build de pruebas (con contenido de ejemplo, `noindex` y `robots.txt` que bloquea a los buscadores).
 
 La calculadora de proyección original está en `legacy/calculadora.html`, solo como referencia. La versión publicada está en `src/views/Calculadora.astro`.

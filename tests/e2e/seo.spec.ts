@@ -50,8 +50,4 @@ describe('seo', () => {
     expect(txt).toContain('Sitemap: https://creativerent.es/sitemap-index.xml');
   });
 
-  it('_redirects is published', async () => {
-    const r = await fetch(PROD + '/_redirects');
-    expect(await r.text()).toContain('/project/* /trabajos/ 301');
-  });
 });

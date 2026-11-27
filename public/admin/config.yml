@@ -3,8 +3,7 @@ backend:
   name: github
   repo: creativerent-maker/Creative-
   branch: main
-  # URL del worker sveltia-cms-auth en la cuenta de Cloudflare de la empresa (pendiente, ver docs/LANZAMIENTO.md)
-  base_url: https://sveltia-cms-auth.example.workers.dev
+  # Acceso con clave personal de GitHub («Sign In Using Access Token»), ver README.md
   commit_messages:
     create: "Panel: nuevo {{collection}} «{{slug}}»"
     update: "Panel: actualizado {{collection}} «{{slug}}»"

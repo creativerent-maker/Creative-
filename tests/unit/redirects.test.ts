@@ -1,29 +1,26 @@
 import { describe, it, expect } from 'vitest';
-import { redirectRules } from '../../src/lib/redirects';
+import { htaccess } from '../../src/lib/redirects';
 
-const rules = redirectRules();
-describe('redirectRules (spec §9)', () => {
+const h = htaccess();
+describe('legacy redirects in .htaccess (spec §9)', () => {
   it.each([
-    '/alquiler-de-material-audiovisual/ /servicios/alquiler-material-audiovisual/ 301',
-    '/alquiler-de-infraestructura/ /servicios/infraestructura/ 301',
-    '/produccion-completa/ /servicios/produccion-completa/ 301',
-    '/mapping/ /servicios/mapping/ 301',
-    '/post-produccion/ /servicios/postproduccion/ 301',
-    '/personal-tecnico/ /servicios/personal-tecnico/ 301',
-    '/trabajos-realizados/ /trabajos/ 301',
-    '/cookie-policy/ /cookies/ 301',
-    '/project/* /trabajos/ 301',
-    '/feed/* / 301',
-    '/comments/feed/* / 301',
-    '/category/* / 301',
-    '/author/* / 301',
-  ])('contains "%s"', (line) => expect(rules).toContain(line));
+    'RewriteRule ^alquiler-de-material-audiovisual/?$ /servicios/alquiler-material-audiovisual/ [R=301,L]',
+    'RewriteRule ^alquiler-de-infraestructura/?$ /servicios/infraestructura/ [R=301,L]',
+    'RewriteRule ^produccion-completa/?$ /servicios/produccion-completa/ [R=301,L]',
+    'RewriteRule ^mapping/?$ /servicios/mapping/ [R=301,L]',
+    'RewriteRule ^post-produccion/?$ /servicios/postproduccion/ [R=301,L]',
+    'RewriteRule ^personal-tecnico/?$ /servicios/personal-tecnico/ [R=301,L]',
+    'RewriteRule ^trabajos-realizados/?$ /trabajos/ [R=301,L]',
+    'RewriteRule ^cookie-policy/?$ /cookies/ [R=301,L]',
+    'RewriteRule ^project/ /trabajos/ [R=301,L]',
+    'RewriteRule ^feed/ / [R=301,L]',
+    'RewriteRule ^comments/feed/ / [R=301,L]',
+    'RewriteRule ^category/ / [R=301,L]',
+    'RewriteRule ^author/ / [R=301,L]',
+    'RewriteRule ^wp-login\\.php$ / [R=301,L]',
+  ])('contains "%s"', (line) => expect(h.split('\n')).toContain(line));
 
-  it('also has the no-trailing-slash variant of exact rules', () => {
-    expect(rules).toContain('/mapping /servicios/mapping/ 301');
-    expect(rules).toContain('/cookie-policy /cookies/ 301');
-  });
-  it('never redirects a path to itself', () => {
-    for (const r of rules) { const [from, to] = r.split(' '); expect(from).not.toBe(to); }
+  it('www is redirected to the bare domain', () => {
+    expect(h).toContain('RewriteCond %{HTTP_HOST} ^www\\.(.+)$ [NC]');
   });
 });
